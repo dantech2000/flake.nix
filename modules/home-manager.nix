@@ -16,41 +16,42 @@
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = [
-    pkgs.act
-    pkgs.bat
-    pkgs.cookiecutter
-    pkgs.coreutils-full
-    pkgs.curl
-    pkgs.direnv
-    pkgs.eza
-    pkgs.fzf
-    pkgs.gh
-    pkgs.gnugrep
-    pkgs.gnupg
-    pkgs.go-task
-    pkgs.hello
-    pkgs.htop
-    pkgs.jq
-    pkgs.just
-    pkgs.k9s
-    pkgs.kubecolor
-    pkgs.kubectx
-    pkgs.kubernetes-helm
-    pkgs.neofetch
-    pkgs.neovim
-    pkgs.packer
-    pkgs.pulumi-bin
-    pkgs.ripgrep
-    pkgs.shellcheck
-    pkgs.terraform
-    pkgs.terraform-ls
-    pkgs.tflint
-    pkgs.tmux
-    pkgs.wget
-    pkgs.yt-dlp
-    pkgs.zoxide
-    pkgs.stow
+  home.packages = with pkgs; [
+    act
+    bat
+    cookiecutter
+    coreutils-full
+    curl
+    direnv
+    eza
+    fzf
+    gh
+    gnugrep
+    gnupg
+    go-task
+    hello
+    htop
+    jq
+    just
+    k9s
+    kubecolor
+    kubectx
+    kubernetes-helm
+    neofetch
+    neovim
+    packer
+    pulumi-bin
+    ripgrep
+    shellcheck
+    terraform
+    terraform-ls
+    tflint
+    tmux
+    wget
+    yt-dlp
+    zoxide
+    stow
+    yq
 
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
@@ -99,8 +100,5 @@
   programs.home-manager.enable = true;
 
   # OS Configurations
-  targets.darwin.defaults."com.apple.finder".ShowStatusBar = true;
-  targets.darwin.defaults."com.apple.finder".AppleShowAllFiles = true;
-  targets.darwin.defaults."com.apple.dock".autohide = true;
   targets.darwin.defaults."com.apple.desktopservices".DSDontWriteNetworkStores = true;
 }
