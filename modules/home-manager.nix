@@ -1,7 +1,6 @@
 { config, pkgs, ... }:
 
 {
-   
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
 
@@ -34,24 +33,56 @@
     jq
     just
     k9s
+    ansible-lint
+    asdf-vm
+    automake
+    awscli2
+    coreutils-full
+    dnsmasq
+    ffmpeg_7
+    findutils
+    gnused
+    imagemagick
+    kind
     kubecolor
+    kubectl
     kubectx
     kubernetes-helm
+    libheif
+    libxslt
+    mas
     neofetch
     neovim
     packer
     pulumi-bin
+    redis
     ripgrep
+    sshpass
     shellcheck
+    stow
     terraform
     terraform-ls
+    terraformer
     tflint
+    time
+    tldr
     tmux
+    tree
+    trivy
+    unixODBC
+    unzip
+    watchman
     wget
-    yt-dlp
-    zoxide
-    stow
+    yarn
     yq
+    yt-dlp
+    zlib
+    zoxide
+    zsh
+    zsh-autosuggestions
+    zsh-fzf-history-search
+    zsh-fzf-tab
+    zsh-syntax-highlighting
 
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
