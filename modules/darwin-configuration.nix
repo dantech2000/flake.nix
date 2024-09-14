@@ -20,6 +20,7 @@
       programs.zsh.enable = true;  # default shell on catalina
       programs.zsh.enableFzfCompletion  = true;
       programs.zsh.enableFzfHistory = true;
+      programs.zsh.enableSyntaxHighlighting = true;
 
       # OS Configurations
       system.defaults.NSGlobalDomain = {
@@ -52,6 +53,44 @@
       fonts.packages = with pkgs; [
         nerdfonts
       ];
+
+      # Homebrew Casks
+      homebrew = {
+        enable = true;
+        casks = [
+          "1password"
+          "1password-cli"
+          "aws-vault"
+          "contour"
+          "devtoys"
+          "discord"
+          "docker"
+          "dropbox"
+          "figma"
+          "firefox"
+          "font-agave-nerd-font"
+          "font-fira-code"
+          "font-hack-nerd-font"
+          "font-meslo-lg-nerd-font"
+          "google-chrome"
+          "google-cloud-sdk"
+          "insomnia"
+          "iterm2"
+          "ngrok"
+          "notion"
+          "openlens"
+          "session-manager-plugin"
+          "slack"
+          "spotify"
+          "vagrant"
+          "visual-studio-code"
+          "vlc"
+          "wezterm"
+          "zed"
+          "arc"
+          "zoom"
+        ];
+      };
       
       # Create my user account.
       users.users.drodriguez = {
