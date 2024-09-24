@@ -42,6 +42,7 @@
     ffmpeg_7
     findutils
     gnused
+    go
     imagemagick
     kind
     kubecolor
@@ -52,7 +53,6 @@
     libxslt
     mas
     neofetch
-    neovim
     packer
     pulumi-bin
     redis

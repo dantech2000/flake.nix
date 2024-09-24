@@ -18,12 +18,17 @@
       "drodriguezs-MacBook-Pro" = nix-darwin.lib.darwinSystem {
         system = "x86_64-darwin";
         modules = [
-          ./modules/darwin-configuration.nix
+          ./modules/darwin/drodriguezs-MacBook-Pro.nix
           home-manager.darwinModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.drodriguez = import ./modules/home-manager.nix;
+              home-manager.users.drodriguez = {
+                imports = [ 
+                  ./modules/home/home.nix
+                  ./modules/neovim
+                ];
+              };
             }
         ];
       };
