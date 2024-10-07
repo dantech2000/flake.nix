@@ -66,6 +66,7 @@
           "discord"
           "docker"
           "dropbox"
+          "element"
           "figma"
           "firefox"
           "font-agave-nerd-font"
