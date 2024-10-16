@@ -6,6 +6,7 @@
       environment.systemPackages =
         [ 
           pkgs.vim
+          pkgs.starship
           pkgs.mkalias
         ];
 
@@ -28,17 +29,22 @@
         AppleInterfaceStyle = "Dark";
         AppleShowAllExtensions = true;
         AppleShowAllFiles = true;
+        KeyRepeat = 2;
       };
-
+      
+      # Dock Configurations
       system.defaults.dock = {
         autohide = true;
       };
 
+      # Finder Configurations 
       system.defaults.finder = {
+        FXPreferredViewStyle = "clmv";
         ShowStatusBar = true;
         ShowPathbar = true;
       };
 
+      # Applications
       system.activationScripts.applications.text = let
         env = pkgs.buildEnv {
           name = "system-applications";
@@ -79,9 +85,13 @@
       # Homebrew Casks
       homebrew = {
         enable = true;
+        brews = [
+          "mas"
+        ];
         casks = [
-          "1password"
           "1password-cli"
+          "1password"
+          "arc"
           "aws-vault"
           "contour"
           "devtoys"
@@ -97,6 +107,8 @@
           "font-meslo-lg-nerd-font"
           "google-chrome"
           "google-cloud-sdk"
+          "hammerspoon"
+          "iina"
           "insomnia"
           "iterm2"
           "ngrok"
@@ -110,11 +122,18 @@
           "vlc"
           "wezterm"
           "zed"
-          "arc"
           "zoom"
         ];
+        masApps = {
+          "The Unarchiver" = 425424353;
+        };
+        onActivation = {
+          cleanup = "zap";
+          autoUpdate = true;
+          upgrade = true;
+        };
       };
-      
+
       # Create my user account.
       users.users.drodriguez = {
           name = "drodriguez";

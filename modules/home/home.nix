@@ -42,6 +42,7 @@
     ffmpeg_7
     findutils
     gnused
+    devenv
     go
     imagemagick
     just
@@ -53,13 +54,14 @@
     libheif
     libxslt
     mas
+    mongosh
     neofetch
     packer
     pulumi-bin
     redis
     ripgrep
-    sshpass
     shellcheck
+    sshpass
     stow
     terraform
     terraform-ls
@@ -126,6 +128,10 @@
   # if you don't want to manage your shell through Home Manager.
   home.sessionVariables = {
     # EDITOR = "emacs";
+  };
+
+  programs.starship = {
+    enable = true;
   };
 
   # Let Home Manager install and manage itself.
