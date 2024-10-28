@@ -15,12 +15,13 @@
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = with pkgs; [
+  home.packages = with pkgs;  [
     act
     bat
     cookiecutter
     coreutils-full
     curl
+    devbox
     direnv
     eza
     fzf
@@ -42,6 +43,7 @@
     ffmpeg_7
     findutils
     gnused
+    helmfile-wrapped
     devenv
     go
     imagemagick
@@ -51,6 +53,7 @@
     kubectl
     kubectx
     kubernetes-helm
+    kubernetes-helmPlugins.helm-diff
     libheif
     libxslt
     mas

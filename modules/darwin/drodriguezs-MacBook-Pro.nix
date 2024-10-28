@@ -106,7 +106,6 @@
           "font-hack-nerd-font"
           "font-meslo-lg-nerd-font"
           "google-chrome"
-          "google-cloud-sdk"
           "hammerspoon"
           "iina"
           "insomnia"
