@@ -18,6 +18,7 @@
   home.packages = with pkgs;  [
     act
     bat
+    carapace
     cookiecutter
     coreutils-full
     curl
@@ -77,7 +78,6 @@
     trivy
     unixODBC
     unzip
-    watchman
     wget
     yarn
     yq
