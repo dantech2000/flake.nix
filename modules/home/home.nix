@@ -30,6 +30,7 @@
     gnugrep
     gnupg
     go-task
+    goreleaser
     hello
     htop
     jq
