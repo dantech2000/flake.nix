@@ -31,13 +31,7 @@
             }
           ];
         };
-      };
-      # Optionally, use home-manager.extraSpecialArgs to pass
-      # arguments to home.nix
-      # Expose the package set, including overlays, for convenience.
-      darwinPackages = self.darwinConfigurations."drodriguezs-MacBook-Pro".pkgs;
 
-      darwinConfigurations = {
         "zerocool" = nix-darwin.lib.darwinSystem {
           system = "x86_64-darwin";
           modules = [
@@ -56,9 +50,5 @@
           ];
         };
       };
-      # Optionally, use home-manager.extraSpecialArgs to pass
-      # arguments to home.nix
-      # Expose the package set, including overlays, for convenience.
-      darwinPackages = self.darwinConfigurations."zerocools-MacBook-Pro".pkgs;
     };
 }
