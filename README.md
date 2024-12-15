@@ -1,89 +1,165 @@
-# My Nix Configuration
+# Nix Darwin Configuration
 
-This repository contains my personal Nix configuration for macOS, using nix-darwin and Home Manager.
+This repository contains my personal Nix configuration for macOS, using nix-darwin and Home Manager. It provides a declarative way to manage both system-level and user-level configurations.
+
+## Features
+
+- **System Configuration**
+  - Dark mode enabled by default
+  - Touch ID authentication for sudo
+  - Optimized keyboard repeat settings
+  - Custom dock and finder preferences
+  - System-wide Nerd Fonts installation
+
+- **Development Environment**
+  - Neovim configuration with extensive plugin support
+  - Development tools for multiple languages (Go, Python, Terraform, etc.)
+  - Git and GitHub CLI integration
+  - Docker and Kubernetes tools (k9s, kubectl, helm)
+  - AWS tools (aws-cli, session-manager-plugin)
+
+- **Terminal Environment**
+  - Zsh as default shell with various enhancements:
+    - FZF integration for completion and history
+    - Syntax highlighting
+    - Starship prompt
+  - Modern CLI tools (bat, eza, ripgrep, fzf)
+
+- **Applications**
+  - Managed via Homebrew Casks:
+    - Browsers: Arc, Firefox, Chrome
+    - Development: VSCode, Zed, iTerm2, Wezterm, Docker
+    - Productivity: 1Password, Notion, Obsidian
+    - Communication: Slack, Discord, Zoom
+    - Media: Spotify, VLC, IINA
 
 ## Prerequisites
 
--   macOS
--   Command Line Tools for Xcode (can be installed by running `xcode-select --install` in the terminal)
+- macOS
+- Command Line Tools for Xcode: `xcode-select --install`
 
 ## Installation
 
-### 1. Install Nix
+1. **Install Nix**
+   ```bash
+   curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh
+   ```
+   This installer provides several advantages:
+   - Automatic system configuration
+   - Automatic daemon installation and startup
+   - Built-in support for Flakes
+   - Easy uninstallation if needed
 
-First, install Nix by running the following command in your terminal:
+2. **Clone this repository**
+   ```bash
+   git clone https://github.com/dantech2000/flake.nix.git ~/.config/nix-darwin
+   cd ~/.config/nix-darwin
+   ```
 
-```bash
-sh <(curl -L https://nixos.org/nix/install)
+3. **Build and activate the configuration**
+   ```bash
+   # First time setup
+   nix build .#darwinConfigurations.drodriguezs-MacBook-Pro.system
+   ./result/sw/bin/darwin-rebuild switch --flake .#drodriguezs-MacBook-Pro
+
+   # Subsequent updates
+   darwin-rebuild switch --flake .#drodriguezs-MacBook-Pro
+   ```
+
+   Note: The Determinate Systems installer enables flakes by default, so no additional configuration is needed.
+
+## Directory Structure
+
 ```
-
-### 2. Install nix-darwin
-
-To install nix-darwin, run the following commands:
-
-```bash
-nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
-./result/bin/darwin-installer
+.
+├── flake.nix              # Main configuration entry point
+├── modules/
+│   ├── darwin/            # macOS-specific configurations
+│   │   └── drodriguezs-MacBook-Pro.nix
+│   ├── home/             # User-specific configurations
+│   │   └── home.nix
+│   └── neovim/          # Neovim configuration
+│       ├── default.nix
+│       └── config/      # Neovim lua configurations
 ```
-
-Follow the prompts to complete the installation.
-
-### 3. Install Home Manager
-
-Home Manager can be installed as part of the nix-darwin configuration. We'll include it in the `flake.nix` file, so there's no need for a separate installation step.
-
-### 4. Clone this repository
-
-Clone this repository to your local machine:
-
-```bash
-git clone https://github.com/dantech2000/flake.nix.git
-cd flake.nix
-```
-
-### 5. Apply the configuration
-
-To apply the configuration, run:
-
-```bash
-darwin-rebuild switch --flake .
-```
-
-This will apply the configuration and install the necessary packages.
-
-This command will build and activate the nix-darwin configuration defined in the `flake.nix` file.
-
-## Updating
-
-To update your system with the latest changes from this repository:
-
-1. Pull the latest changes:
-
-    ```bash
-    git pull origin main
-    ```
-
-2. Rebuild the system:
-    ```bash
-    darwin-rebuild switch --flake .
-    ```
 
 ## Customization
 
-To customize this configuration for your own use:
+### System Configuration
+Edit `modules/darwin/drodriguezs-MacBook-Pro.nix` to modify:
+- System packages
+- macOS settings
+- Homebrew packages and casks
+- System-wide configurations
 
-1. Edit the `flake.nix` file to change system-wide settings.
-2. Modify the files in the `modules` directory to adjust specific configurations.
-3. Update the `home.nix` file (if present) to change user-specific settings.
+### User Configuration
+Edit `modules/home/home.nix` to modify:
+- User packages
+- Shell configurations
+- Development tools
+- Personal preferences
 
-After making changes, rebuild the system using the command in the "Updating" section.
+### Neovim Configuration
+Edit files in `modules/neovim/` to modify:
+- Plugin list
+- Editor settings
+- Language server configurations
+- Key mappings
+
+## Maintenance
+
+### Updating the System
+```bash
+# Pull latest changes
+git pull origin main
+
+# Update and switch to new configuration
+darwin-rebuild switch --flake .#drodriguezs-MacBook-Pro
+```
+
+### Cleaning Up
+```bash
+# Remove old generations
+sudo nix-collect-garbage -d
+
+# Remove specific generation
+nix-env --delete-generations [generation-number]
+```
 
 ## Troubleshooting
 
-If you encounter any issues during installation or usage, please check the following:
+### Common Issues
 
--   Ensure Nix is properly installed and sourced in your shell.
--   Verify that you have the latest version of nix-darwin and Home Manager.
--   Check the Nix, nix-darwin, and Home Manager documentation for known issues or solutions.
+1. **Dirty Git Tree Warning**
+   ```bash
+   # Check status
+   git status
+   
+   # Commit or stash changes
+   git add .
+   git commit -m "Update configuration"
+   ```
 
-If problems persist, feel free to open an issue in this repository.
+2. **Homebrew Issues**
+   ```bash
+   # Repair Homebrew
+   brew doctor
+   
+   # Update Homebrew
+   brew update
+   ```
+
+3. **Configuration Not Taking Effect**
+   - Ensure you're using the correct hostname in the flake configuration
+   - Try rebuilding with `--show-trace` for more detailed error messages
+   ```bash
+   darwin-rebuild switch --flake .#drodriguezs-MacBook-Pro --show-trace
+   ```
+
+## Contributing
+
+Feel free to submit issues and enhancement requests!
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.

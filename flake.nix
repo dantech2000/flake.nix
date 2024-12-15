@@ -12,7 +12,7 @@
   outputs = { self, nix-darwin, home-manager, nixpkgs, ... }@inputs:
     {
       # Build darwin flake using:
-      # $ darwin-rebuild build --flake .#drodriguezs-MacBook-Pr
+      # $ darwin-rebuild build --flake .#drodriguezs-MacBook-Pro
       darwinConfigurations = {
         "drodriguezs-MacBook-Pro" = nix-darwin.lib.darwinSystem {
           system = "x86_64-darwin";
