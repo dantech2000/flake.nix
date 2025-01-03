@@ -9,6 +9,7 @@
       pkgs.starship
       pkgs.mkalias
       pkgs.nixpkgs-fmt
+      pkgs.nodejs
     ];
 
   # Auto upgrade nix package and the daemon service.
@@ -92,7 +93,7 @@
   homebrew = {
     enable = true;
     brews = [
-      "mas"
+      # "mas" is removed since it's automatically installed by masApps
     ];
     casks = [
       "1password-cli"

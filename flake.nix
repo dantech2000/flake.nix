@@ -1,5 +1,5 @@
 {
-  description = "D Rod's Darwin system flake";
+  description = "D Rod's Darwin and NixOS system flake";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -7,48 +7,61 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   };
 
-  outputs = { self, nix-darwin, home-manager, nixpkgs, ... }@inputs:
+  outputs = { self, nix-darwin, home-manager, nixpkgs, nixos-hardware, ... }@inputs:
+    let
+      mkDarwinConfig = { system, hostname, user }: nix-darwin.lib.darwinSystem {
+        inherit system;
+        modules = [
+          ./modules/darwin/${hostname}.nix
+          home-manager.darwinModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.${user} = {
+              imports = [
+                ./modules/home/home.nix
+                ./modules/neovim
+              ];
+            };
+          }
+        ];
+      };
+
+      mkNixosConfig = { system, user }: nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [
+          ./modules/nixos/configuration.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.${user} = {
+              imports = [
+                ./modules/home/home.nix
+                ./modules/neovim
+              ];
+            };
+          }
+        ];
+      };
+    in
     {
       # Build darwin flake using:
       # $ darwin-rebuild build --flake .#drodriguezs-MacBook-Pro
-      darwinConfigurations = {
-        "drodriguezs-MacBook-Pro" = nix-darwin.lib.darwinSystem {
-          system = "x86_64-darwin";
-          modules = [
-            ./modules/darwin/drodriguezs-MacBook-Pro.nix
-            home-manager.darwinModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.drodriguez = {
-                imports = [
-                  ./modules/home/home.nix
-                  ./modules/neovim
-                ];
-              };
-            }
-          ];
-        };
+      darwinConfigurations."drodriguezs-MacBook-Pro" = mkDarwinConfig {
+        system = "x86_64-darwin";
+        hostname = "drodriguezs-MacBook-Pro";
+        user = "drodriguez";
+      };
 
-        "zerocool" = nix-darwin.lib.darwinSystem {
-          system = "x86_64-darwin";
-          modules = [
-            ./modules/darwin/zerocools-MacBook-Pro.nix
-            home-manager.darwinModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.zerocool = {
-                imports = [
-                  ./modules/home/home.nix
-                  ./modules/neovim
-                ];
-              };
-            }
-          ];
-        };
+      # Build NixOS configuration using:
+      # $ sudo nixos-rebuild switch --flake .#drod-nixos
+      nixosConfigurations."drod-nixos" = mkNixosConfig {
+        system = "x86_64-linux";
+        user = "drodriguez";
       };
     };
 }

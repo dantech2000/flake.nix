@@ -58,7 +58,6 @@
     kubernetes-helmPlugins.helm-diff
     libheif
     libxslt
-    mas
     mongosh
     neofetch
     packer
