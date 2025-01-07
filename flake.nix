@@ -8,10 +8,13 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nix-darwin, home-manager, nixpkgs, nixos-hardware, ... }@inputs:
+  outputs = { self, nix-darwin, home-manager, nixpkgs, nixos-hardware, flake-utils, ... }@inputs:
     let
+      inherit (flake-utils.lib) eachDefaultSystem;
+
       mkDarwinConfig = { system, hostname, user }: nix-darwin.lib.darwinSystem {
         inherit system;
         modules = [
@@ -48,18 +51,35 @@
         ];
       };
     in
-    {
-      # Build darwin flake using:
-      # $ darwin-rebuild build --flake .#drodriguezs-MacBook-Pro
+    (eachDefaultSystem (system: {
+      # Per-system attributes can be defined here
+      formatter = nixpkgs.legacyPackages.${system}.nixpkgs-fmt;
+      devShells.default = nixpkgs.legacyPackages.${system}.mkShell {
+        buildInputs = with nixpkgs.legacyPackages.${system}; [
+          nixpkgs-fmt
+          git
+          nil # Nix LSP
+          zsh
+        ];
+        shellHook = ''
+          export SHELL=${nixpkgs.legacyPackages.${system}.zsh}/bin/zsh
+          exec ${nixpkgs.legacyPackages.${system}.zsh}/bin/zsh
+        '';
+      };
+    })) // {
+      # Your existing configurations
       darwinConfigurations."drodriguezs-MacBook-Pro" = mkDarwinConfig {
         system = "x86_64-darwin";
         hostname = "drodriguezs-MacBook-Pro";
         user = "drodriguez";
       };
 
-      # Build NixOS configuration using:
-      # $ sudo nixos-rebuild switch --flake .#drod-nixos
       nixosConfigurations."drod-nixos" = mkNixosConfig {
+        system = "x86_64-linux";
+        user = "drodriguez";
+      };
+
+      nixosConfigurations."drod-wsl" = mkNixosConfig {
         system = "x86_64-linux";
         user = "drodriguez";
       };
