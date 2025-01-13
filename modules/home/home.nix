@@ -49,6 +49,7 @@
     devenv
     go
     imagemagick
+    jetbrains-mono
     just
     kind
     kubecolor
@@ -58,6 +59,7 @@
     kubernetes-helmPlugins.helm-diff
     libheif
     libxslt
+    monaspace
     mongosh
     neofetch
     packer
