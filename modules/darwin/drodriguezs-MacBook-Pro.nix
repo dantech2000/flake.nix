@@ -117,6 +117,7 @@
       "iina"
       "insomnia"
       "iterm2"
+      "legcord"
       "ngrok"
       "notion"
       "obsidian"
