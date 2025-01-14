@@ -65,6 +65,7 @@
     packer
     pulumi-bin
     redis
+    redli
     ripgrep
     shellcheck
     sshpass
