@@ -73,24 +73,36 @@ This repository contains my personal Nix configuration for macOS, using nix-darw
 ```
 .
 ├── flake.nix              # Main configuration entry point
+├── flake.lock            # Lock file for dependencies
 ├── modules/
-│   ├── darwin/            # macOS-specific configurations
-│   │   └── drodriguezs-MacBook-Pro.nix
-│   ├── home/             # User-specific configurations
-│   │   └── home.nix
-│   └── neovim/          # Neovim configuration
-│       ├── default.nix
-│       └── config/      # Neovim lua configurations
+│   ├── darwin/           # macOS-specific configurations
+│   ├── home/            # User-specific configurations
+│   ├── neovim/         # Neovim configuration
+│   └── nixos/          # NixOS configurations
 ```
 
 ## Customization
 
 ### System Configuration
-Edit `modules/darwin/drodriguezs-MacBook-Pro.nix` to modify:
+Edit `modules/darwin/<hostname>.nix` to modify:
 - System packages
 - macOS settings
 - Homebrew packages and casks
 - System-wide configurations
+
+Note: Replace `<hostname>` with your machine's hostname (e.g., `drodriguezs-MacBook-Pro.nix`)
+
+### Development Environment
+The configuration includes a development shell that provides:
+- `nixpkgs-fmt` for Nix code formatting
+- `nil` for Nix language server support
+- Git for version control
+- Zsh as the default shell
+
+To enter the development environment:
+```bash
+nix develop
+```
 
 ### User Configuration
 Edit `modules/home/home.nix` to modify:
@@ -154,6 +166,24 @@ nix-env --delete-generations [generation-number]
    - Try rebuilding with `--show-trace` for more detailed error messages
    ```bash
    darwin-rebuild switch --flake .#drodriguezs-MacBook-Pro --show-trace
+   ```
+
+4. **Nix Store Issues**
+   ```bash
+   # Clear derivation links
+   sudo rm /nix/var/nix/gcroots/auto/*
+   
+   # Optimize nix store
+   nix store optimise
+   ```
+
+5. **Flake Lock Issues**
+   ```bash
+   # Update flake inputs
+   nix flake update
+   
+   # Update specific input
+   nix flake lock --update-input nixpkgs
    ```
 
 ## Contributing
