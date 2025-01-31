@@ -14,21 +14,31 @@
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
-  # nix.package = pkgs.nix;
 
   # Necessary for using flakes on this system.
   nix.settings = {
     trusted-users = [ "root" "drodriguez" ];
     experimental-features = "nix-command flakes";
   };
-  # nix.settings.experimental-features = "nix-command flakes";
-
 
   # Create /etc/zshrc that loads the nix-darwin environment.
-  programs.zsh.enable = true; # default shell on catalina
-  programs.zsh.enableFzfCompletion = true;
-  programs.zsh.enableFzfHistory = true;
-  programs.zsh.enableSyntaxHighlighting = true;
+  programs.zsh = {
+    enable = true;
+    enableFzfCompletion = true;
+    enableFzfHistory = true;
+    enableSyntaxHighlighting = true;
+    enableBashCompletion = true;
+    variables = {
+      SHELL = "${pkgs.zsh}/bin/zsh";
+    };
+  };
+
+  # Set default shell
+  environment.shells = with pkgs; [ zsh ];
+  
+  # Add shell path
+  environment.systemPath = [ "/opt/homebrew/bin" ];
+  environment.pathsToLink = [ "/Applications" "/Applications/Utilities" "/Developer" "/Library" "/System" "/Users" "/Volumes" "/bin" "/etc" "/home" "/opt" "/private" "/sbin" "/tmp" "/usr" "/var" ];
 
   # OS Configurations
   system.defaults.NSGlobalDomain = {
@@ -71,7 +81,6 @@
         ${pkgs.mkalias}/bin/mkalias "$src" "/Applications/Nix Apps/$app_name"
       done
     '';
-
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
@@ -147,5 +156,6 @@
   users.users.drodriguez = {
     name = "drodriguez";
     home = "/Users/drodriguez";
+    shell = pkgs.zsh;
   };
 }

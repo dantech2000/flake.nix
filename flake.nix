@@ -27,6 +27,14 @@
         home-manager.useUserPackages = true;
       };
 
+      # Nixpkgs configuration
+      nixpkgsConfig = {
+        config = {
+          allowUnfree = true;
+          allowUnfreePredicate = (_: true);
+        };
+      };
+
       # Function to create system-specific configurations
       mkSystemConfig = { system, hostname, user, extraModules ? [] }: {
         inherit system;
@@ -34,6 +42,7 @@
         modules = [
           ./modules/shared/default.nix
           {
+            nixpkgs = nixpkgsConfig;
             networking.hostName = hostname;
             users.users.${user} = {
               home = "/home/${user}";
@@ -58,13 +67,20 @@
         specialArgs = { inherit inputs user hostname; };
         modules = [
           ./modules/darwin/${hostname}.nix
+          { nixpkgs = nixpkgsConfig; }
           home-manager.darwinModules.home-manager
           (sharedModules // {
-            home-manager.users.${user} = {
-              imports = [
-                ./modules/home/home.nix
-                ./modules/neovim
-              ];
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              backupFileExtension = "backup";
+              users.${user} = {
+                imports = [
+                  ./modules/home/home.nix
+                  ./modules/neovim
+                ];
+                nixpkgs = nixpkgsConfig;
+              };
             };
           })
         ];

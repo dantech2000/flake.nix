@@ -18,11 +18,58 @@ This repository contains my personal Nix configuration for macOS, using nix-darw
   - Docker and Kubernetes tools (k9s, kubectl, helm)
   - AWS tools (aws-cli, session-manager-plugin)
 
-- **Terminal Environment**
+- **Shell Environment**
   - Zsh as default shell with various enhancements:
-    - FZF integration for completion and history
-    - Syntax highlighting
-    - Starship prompt
+    - **Starship Prompt**: A minimal, blazing-fast, and infinitely customizable prompt
+    - **Oh My Zsh Integration**:
+      - Theme: awesomepanda
+      - Plugins: git, kubectl, brew, macos, colored-man-pages, virtualenv, terraform, tmux, docker, ssh-agent
+    - **Shell Features**:
+      - Vi mode with custom key bindings
+      - History settings with incremental search
+      - Advanced completion system with Carapace integration
+      - Syntax highlighting and autosuggestions
+      - Custom aliases for common commands
+
+- **Environment Variables**
+  - **XDG Base Directories**:
+    - `XDG_CONFIG_HOME`: Set to `~/.config`
+    - `ZDOTDIR`: Set to `~/.config/zsh`
+    - `ZSH_COMPDUMP`: Set to `~/.cache/zsh/.zcompdump`
+
+  - **Development Tools**:
+    - `EDITOR`: Set to neovim
+    - `GOPATH`: Set to `~/go`
+    - `PYTHONDONTWRITEBYTECODE`: Prevents Python from creating .pyc files
+
+  - **System Preferences**:
+    - `LC_ALL`: Set to "en_US.UTF-8"
+    - `LESS`: Set to "-R" for proper color support
+    - `SSH_CONFIG_DIR`: Set to `~/.config/ssh`
+    - `GPG_TTY`: Set dynamically for GPG signing
+    - `umask`: Set to 022 for secure file permissions
+
+  - **Search and Completion**:
+    - `FZF_DEFAULT_COMMAND`: Uses ripgrep for better file searching
+    - `FZF_DEFAULT_OPTS`: Customized for better display
+    - `CARAPACE_BRIDGES`: Configured for cross-shell completion
+
+- **Path Configuration**
+  The configuration manages PATH additions for various tools:
+  ```bash
+  /usr/local/bin
+  /usr/local/sbin
+  /opt/homebrew/bin
+  /opt/homebrew/sbin
+  $HOME/.yarn/bin
+  $HOME/.config/yarn/global/node_modules/.bin
+  /usr/local/opt/llvm/bin/clangd
+  /Library/Frameworks/Python.framework/Versions/3.7/bin
+  $GOROOT/bin
+  $GOPATH/bin
+  ```
+
+- **Terminal Environment**
   - Modern CLI tools (bat, eza, ripgrep, fzf)
 
 - **Applications**
@@ -117,6 +164,30 @@ Edit files in `modules/neovim/` to modify:
 - Editor settings
 - Language server configurations
 - Key mappings
+
+## Common Tasks
+
+This project includes a Taskfile for common operations. To use it, make sure you have [Task](https://taskfile.dev) installed.
+
+To see all available tasks:
+```bash
+task
+```
+
+Common tasks include:
+
+- `task switch` - Rebuild and switch to the new configuration
+- `task update` - Update flake inputs
+- `task check` - Check the configuration for errors
+- `task rollback` - Rollback to the previous generation
+- `task clean` - Clean up old profiles and garbage collect
+- `task edit` - Open the configuration in your editor
+
+For system maintenance:
+- `task gc` - Garbage collect old generations
+- `task list-generations` - List all system generations
+- `task history` - Show the history of configurations
+- `task show-config` - Show the current system configuration
 
 ## Maintenance
 

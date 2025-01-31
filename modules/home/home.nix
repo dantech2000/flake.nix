@@ -15,7 +15,7 @@
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = with pkgs;  [
+  home.packages = with pkgs; [
     act
     bat
     carapace
@@ -92,52 +92,116 @@
     zsh-fzf-history-search
     zsh-fzf-tab
     zsh-syntax-highlighting
-
-    # # It is sometimes useful to fine-tune packages, for example, by applying
-    # # overrides. You can do that directly here, just don't forget the
-    # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
-    # # fonts?
-    # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
-
-    # # You can also create simple shell scripts directly inside your
-    # # configuration. For example, this adds a command 'my-hello' to your
-    # # environment:
-    # (pkgs.writeShellScriptBin "my-hello" ''
-    #   echo "Hello, ${config.home.username}!"
-    # '')
   ];
 
-  # Home Manager is pretty good at managing dotfiles. The primary way to manage
-  # plain files is through 'home.file'.
-  home.file = {
-    # # Building this configuration will create a copy of 'dotfiles/screenrc' in
-    # # the Nix store. Activating the configuration will then make '~/.screenrc' a
-    # # symlink to the Nix store copy.
-    # ".screenrc".source = dotfiles/screenrc;
-
-    # # You can also set the file content immediately.
-    # ".gradle/gradle.properties".text = ''
-    #   org.gradle.console=verbose
-    #   org.gradle.daemon.idletimeout=3600000
-    # '';
-  };
-
-  # You can also manage environment variables but you will have to manually
-  # source
-  #
-  #  ~/.nix-profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  /etc/profiles/per-user/davish/etc/profile.d/hm-session-vars.sh
-  #
-  # if you don't want to manage your shell through Home Manager.
   home.sessionVariables = {
-    # EDITOR = "emacs";
+    EDITOR = "nvim";
+    SHELL = "${pkgs.zsh}/bin/zsh";
+    GOPATH = "$HOME/go";
+    FZF_DEFAULT_COMMAND = "rg --files --hidden --follow --no-ignore-vcs";
+    FZF_DEFAULT_OPTS = "--height 40% --layout=reverse --border";
+    GPG_TTY = "$(tty)";
+    CARAPACE_BRIDGES = "zsh,fish,bash,inshellisense";
+    
+    # Additional environment variables
+    XDG_CONFIG_HOME = "$HOME/.config";
+    ZDOTDIR = "$HOME/.config/zsh";
+    ZSH_COMPDUMP = "$HOME/.cache/zsh/.zcompdump";
+    LC_ALL = "en_US.UTF-8";
+    LESS = "-R";
+    SSH_CONFIG_DIR = "$HOME/.config/ssh";
+    PYTHONDONTWRITEBYTECODE = "1";
   };
 
+  # ZSH Configuration
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    autosuggestion.enable = true;
+    syntaxHighlighting.enable = true;
+
+    initExtraFirst = ''
+      # Set umask
+      umask 022
+    '';
+
+    initExtra = ''
+      # For Debugging (commented out by default)
+      # set -x
+
+      # Set variable for current user
+      local username="''${USER:-$(whoami)}"
+
+      # History and completion settings
+      setopt autocd interactive_comments INC_APPEND_HISTORY
+      autoload -Uz compinit
+      compinit -C
+
+      # Vi mode settings and key bindings
+      bindkey '^R' history-incremental-search-backward
+      bindkey -v
+
+      # Kubectl completion
+      source <(kubectl completion zsh)
+
+      # Carapace completion
+      export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'
+      zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+      source <(carapace _carapace)
+      zstyle ':completion:*:git:*' group-order 'main commands' 'alias commands' 'external commands'
+
+      # Add additional paths
+      export PATH="/usr/local/bin:/usr/local/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+      export PATH="/usr/local/opt/llvm/bin/clangd:/Library/Frameworks/Python.framework/Versions/3.7/bin:$PATH"
+      export PATH="$GOROOT/bin:$PATH"
+      export PATH="$PATH:$GOPATH/bin"
+    '';
+
+    shellAliases = {
+      k = "kubectl";
+      ls = "eza --icons=always";
+      lss = "/bin/ls";
+      tmux = "tmux -f ~/.config/tmux/tmux.conf";
+      p = "ping google.com";
+      ll = "/usr/local/bin/lsd --long --group-dirs=first";
+      lla = "/usr/local/bin/lsd --long --all --group-dirs=first";
+      llt = "/usr/local/bin/lsd --tree --all";
+      shell = "vim $ZDOTDIR/.zshrc";
+      profile = "vim $HOME/.zprofile";
+      gpinit = "git push --set-upstream origin \"$(git symbolic-ref --short HEAD)\"";
+      rebuild = "darwin-rebuild switch --flake ~/.config/nix-darwin";
+    };
+
+    oh-my-zsh = {
+      enable = true;
+      plugins = [
+        "git"
+        "kubectl"
+        "brew"
+        "macos"
+        "colored-man-pages"
+        "virtualenv"
+        "terraform"
+        "tmux"
+        "docker"
+        "ssh-agent"
+      ];
+      theme = "awesomepanda";
+    };
+  };
+
+  # Starship Configuration
   programs.starship = {
     enable = true;
+    enableZshIntegration = true;
+    settings = {
+      add_newline = true;
+      character = {
+        success_symbol = "[➜](bold green)";
+        error_symbol = "[➜](bold red)";
+      };
+      package.disabled = false;
+    };
   };
 
   # Let Home Manager install and manage itself.
