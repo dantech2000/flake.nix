@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   # Home Manager needs a bit of information about you and the paths it should
@@ -208,5 +208,7 @@
   programs.home-manager.enable = true;
 
   # OS Configurations
-  targets.darwin.defaults."com.apple.desktopservices".DSDontWriteNetworkStores = true;
+  targets.darwin.defaults = lib.mkIf pkgs.stdenv.isDarwin {
+    "com.apple.desktopservices".DSDontWriteNetworkStores = true;
+  };
 }

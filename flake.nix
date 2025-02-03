@@ -53,7 +53,7 @@
           (sharedModules // {
             home-manager.users.${user} = {
               imports = [
-                ./modules/home/home.nix
+                ./modules/home
                 ./modules/neovim
               ];
             };
@@ -76,7 +76,7 @@
               backupFileExtension = "backup";
               users.${user} = {
                 imports = [
-                  ./modules/home/home.nix
+                  ./modules/home
                   ./modules/neovim
                 ];
                 nixpkgs = nixpkgsConfig;
