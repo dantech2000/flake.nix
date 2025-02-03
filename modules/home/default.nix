@@ -102,6 +102,7 @@
     FZF_DEFAULT_OPTS = "--height 40% --layout=reverse --border";
     GPG_TTY = "$(tty)";
     CARAPACE_BRIDGES = "zsh,fish,bash,inshellisense";
+    STARSHIP_CONFIG = "$HOME/.config/starship/starship.toml";
     
     # Additional environment variables
     XDG_CONFIG_HOME = "$HOME/.config";
@@ -186,7 +187,6 @@
         "docker"
         "ssh-agent"
       ];
-      theme = "awesomepanda";
     };
   };
 
@@ -194,15 +194,10 @@
   programs.starship = {
     enable = true;
     enableZshIntegration = true;
-    settings = {
-      add_newline = true;
-      character = {
-        success_symbol = "[➜](bold green)";
-        error_symbol = "[➜](bold red)";
-      };
-      package.disabled = false;
-    };
   };
+
+  # XDG Configuration Files
+  xdg.configFile."starship/starship.toml".source = ./config/starship.toml;
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;

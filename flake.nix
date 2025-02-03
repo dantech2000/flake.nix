@@ -129,13 +129,6 @@
 
       # NixOS Configurations
       nixosConfigurations = {
-        # VM Configuration
-        "nixos-vm" = mkNixosConfig {
-          system = "x86_64-linux";
-          hostname = "nixos-vm";
-          user = "drodriguez";
-        };
-        
         # Desktop Configuration (commented out until needed)
         # "nixos-desktop" = mkNixosConfig {
         #   system = "x86_64-linux";

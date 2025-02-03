@@ -1,72 +1,95 @@
 # Get editor completions based on the config schema
 "$schema" = 'https://starship.rs/config-schema.json'
 
-# Inserts a blank line between shell prompts
-add_newline = true
+format = """
+$directory\
+$git_branch\
+$git_status\
+$nix_shell\
+$nodejs\
+$rust\
+$golang\
+$python\
+$docker_context\
+$cmd_duration\
+$line_break\
+$character"""
 
-# Replace the '❯' symbol in the prompt with '➜'
-[character] # The name of the module we are configuring is 'character'
-success_symbol = '[➜](bold green)' # The 'success_symbol' segment is being set to '➜' with the color 'bold green'
-error_symbol = '[➜](bold red)'
+# Core prompt symbols
+[character]
+success_symbol = "[❯](green)"
+error_symbol = "[❯](red)"
+vimcmd_symbol = "[❮](green)"
 
-[cmd_duration]
-min_time = 500
-format = "took [$duration](bold yellow)"
-
+# Directory
 [directory]
-truncation_length = 5
+style = "blue bold"
+read_only = " 🔒"
+truncation_length = 4
+truncate_to_repo = true
 format = "[$path]($style)[$read_only]($read_only_style) "
 
+# Git
 [git_branch]
+format = "[$symbol$branch]($style) "
 symbol = "🌱 "
-truncation_length = 4
-truncation_symbol = ""
-ignore_branches = ["master", "main"]
-
-[git_commit]
-commit_hash_length = 4
-tag_symbol = "🔖 "
-
-[git_state]
-format = '[\($state( $progress_current of $progress_total)\)]($style) '
-cherry_pick = "[🍒 PICKING](bold red)"
-
-[git_metrics]
-added_style = "bold blue"
-format = '[+$added]($added_style)/[-$deleted]($deleted_style) '
+style = "bright-black"
 
 [git_status]
-conflicted = "🏳"
-ahead = "🏎💨"
-behind = "😰"
-diverged = "😵"
-up_to_date = "✓"
-untracked = "🤷"
+format = '([\[$all_status$ahead_behind\]]($style) )'
+style = "cyan"
+conflicted = "⚔️ "
+ahead = "⇡${count}"
+behind = "⇣${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+untracked = "?${count}"
 stashed = "📦"
-modified = "📝"
-staged = '[++\($count\)](green)'
-renamed = "👅"
-deleted = "🗑"
+modified = "📝${count}"
+staged = "✓${count}"
+renamed = "»${count}"
+deleted = "✘${count}"
 
-[hostname]
-ssh_only = false
-format =  "on [$hostname](bold red) "
-trim_at = ".companyname.com"
-disabled = false
+# Nix Shell
+[nix_shell]
+format = 'via [❄️ $name](bold blue) '
+heuristic = true
 
-[package]
-disabled = false
-
-[python]
-symbol = "🐍 "
-pyenv_version_name = true
+# Language versions
+[nodejs]
+format = "[$symbol($version )]($style)"
+symbol = "⬢ "
+style = "bold green"
 
 [rust]
+format = "[$symbol($version )]($style)"
 symbol = "🦀 "
+style = "bold red"
+
+[golang]
+format = "[$symbol($version )]($style)"
+symbol = "🐹 "
+style = "bold cyan"
+
+[python]
+format = "[$symbol($version )]($style)"
+symbol = "🐍 "
+style = "bold yellow"
+
+# Docker
+[docker_context]
+format = "via [🐋 $context](blue bold) "
+
+# Command duration
+[cmd_duration]
+format = "took [$duration](bold yellow)"
+min_time = 500
+
+# Disable certain modules
+[hostname]
+disabled = true
 
 [username]
-style_user = "white bold"
-style_root = "black bold"
-format = "[$user]($style) "
-disabled = false
-show_always = true
+disabled = true
+
+[package]
+disabled = true

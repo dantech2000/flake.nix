@@ -39,6 +39,12 @@ tasks:
     cmds:
       - darwin-rebuild check --flake .#{{.FLAKE_NAME}}
 
+  build:
+    desc: Build the configuration without applying it (for testing)
+    cmds:
+      - darwin-rebuild build --flake .#{{.FLAKE_NAME}}
+      - echo "Build complete. You can safely remove the 'result' symlink with 'rm result'"
+
   clean:
     desc: Clean up old profiles and garbage collect
     cmds:
