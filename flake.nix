@@ -127,14 +127,22 @@
         };
       };
 
-      # NixOS Configurations (commented out until needed)
-      # nixosConfigurations = {
-      #   "nixos-desktop" = mkNixosConfig {
-      #     system = "x86_64-linux";
-      #     hostname = "nixos-desktop";
-      #     user = "drodriguez";
-      #   };
-      # };
+      # NixOS Configurations
+      nixosConfigurations = {
+        # VM Configuration
+        "nixos-vm" = mkNixosConfig {
+          system = "x86_64-linux";
+          hostname = "nixos-vm";
+          user = "drodriguez";
+        };
+        
+        # Desktop Configuration (commented out until needed)
+        # "nixos-desktop" = mkNixosConfig {
+        #   system = "x86_64-linux";
+        #   hostname = "nixos-desktop";
+        #   user = "drodriguez";
+        # };
+      };
 
       # Add packages output for compatibility
       packages.x86_64-darwin.default = self.darwinConfigurations."drodriguezs-MacBook-Pro".system;

@@ -50,7 +50,7 @@ tasks:
   list-generations:
     desc: List all system generations
     cmds:
-      - sudo nix-env --list-generations --profile /nix/var/nix/profiles/system
+      - sudo HOME=/Users/drodriguez nix-env --list-generations --profile /nix/var/nix/profiles/system
 
   show-config:
     desc: Show the current system configuration
@@ -61,3 +61,15 @@ tasks:
     desc: Open the configuration in your editor
     cmds:
       - $EDITOR .
+
+  create-vm:
+    desc: Create a new NixOS VM using QEMU
+    cmds:
+      - |
+        nix build .#nixosConfigurations.nixos-vm.config.system.build.vm
+        ./result/bin/run-nixos-vm
+
+  build-vm:
+    desc: Build the VM configuration without running it
+    cmds:
+      - nix build .#nixosConfigurations.nixos-vm.config.system.build.vm

@@ -189,6 +189,248 @@ For system maintenance:
 - `task history` - Show the history of configurations
 - `task show-config` - Show the current system configuration
 
+## VMware Fusion Setup Guide
+
+### Prerequisites
+- VMware Fusion Pro (recommended) or VMware Fusion Player
+- At least 100GB of free disk space
+- NixOS ISO image (preferably the latest stable release)
+
+### VM Configuration Best Practices
+
+#### Hardware Settings
+1. **Processors & Memory**:
+   - CPUs: At least 2 cores (4 recommended)
+   - Memory: Minimum 4GB (8GB recommended)
+   - Enable "Hypervisor" options for better performance
+   ```
+   Settings > System Settings > Processors & Memory:
+   - [x] Enable hypervisor applications
+   - [x] Enable code profiling applications
+   ```
+
+2. **Display**:
+   ```
+   Settings > Display:
+   - [x] Accelerate 3D Graphics
+   - [x] Use full resolution for Retina display
+   - Graphics Memory: 2GB
+   ```
+
+3. **Hard Disk**:
+   - Size: 60GB minimum (100GB recommended)
+   - Bus type: NVMe (for better performance)
+   - Split into multiple files: Yes
+   ```
+   Settings > Hard Disk:
+   - [x] Pre-allocate disk space
+   - [x] Enable defragmentation
+   ```
+
+4. **Network Adapter**:
+   ```
+   Settings > Network Adapter:
+   - Connect at power on: Yes
+   - Network Type: NAT
+   - [x] Enable IPv4
+   - [x] Enable IPv6
+   ```
+
+5. **USB & Bluetooth**:
+   ```
+   Settings > USB & Bluetooth:
+   - USB Compatibility: USB 3.1
+   - [x] Share Bluetooth devices with Linux
+   ```
+
+6. **Sharing**:
+   ```
+   Settings > Sharing:
+   - [x] Enable Shared Folders
+   - [x] Enable Drag and Drop
+   - [x] Enable Copy and Paste
+   ```
+
+### Performance Optimization
+
+1. **VMware Tools Settings**:
+   ```nix
+   # Already included in vm.nix
+   virtualisation.vmware.guest.enable = true;
+   services.vmware.guest = {
+     enable = true;
+     headless = false;
+   };
+   ```
+
+2. **Disk Performance**:
+   ```
+   Settings > Advanced:
+   - [x] Enable disk performance optimization
+   - Hard disk buffering: Enabled
+   ```
+
+3. **Memory Management**:
+   ```
+   Settings > Advanced:
+   - [x] Enable page sharing
+   - [x] Enable memory trimming
+   ```
+
+### Recommended VM Creation Steps
+
+1. Create New Virtual Machine:
+   ```
+   File > New > Create a custom virtual machine
+   ```
+
+2. Choose Operating System:
+   ```
+   Linux > Other Linux 5.x kernel 64-bit
+   ```
+
+3. Configure VM:
+   ```
+   - Name: NixOS-Development
+   - Save As: ~/Virtual Machines/
+   - Firmware Type: UEFI
+   ```
+
+4. Customize Settings:
+   ```
+   Settings > General:
+   - [x] Pass Power Status to VM
+   - [x] Support for Mac OS Keyboard
+   ```
+
+5. Additional Software:
+   ```
+   # Already included in vm.nix
+   environment.systemPackages = with pkgs; [
+     open-vm-tools
+     xorg.xrandr
+     spice-vdagent
+     # Development tools
+     git
+     vim
+     curl
+     wget
+   ];
+   ```
+
+### Troubleshooting Tips
+
+1. **Display Issues**:
+   - If resolution is wrong: `sudo vmware-resolutionSet 1920 1080`
+   - If screen is laggy: Enable 3D acceleration and increase graphics memory
+
+2. **Network Issues**:
+   - If NAT doesn't work: Try bridged networking
+   - If DNS is slow: Add `networking.nameservers = [ "8.8.8.8" "1.1.1.1" ];`
+
+3. **Performance Issues**:
+   - If VM is slow: Increase CPU/RAM allocation
+   - If disk I/O is slow: Enable NVMe and pre-allocate disk space
+
+4. **Shared Folders**:
+   - Mount point: `/mnt/hgfs/`
+   - Auto-mount: Add to `/etc/fstab`
+   - Permissions: Use `vmhgfs-fuse`
+
+### Post-Installation Optimization
+
+1. **Check VMware Tools**:
+   ```bash
+   systemctl status vmware-tools
+   ```
+
+2. **Verify 3D Acceleration**:
+   ```bash
+   glxinfo | grep "direct rendering"
+   ```
+
+3. **Test Shared Folders**:
+   ```bash
+   # Mount shared folders
+   sudo vmhgfs-fuse .host:/ /mnt/hgfs/ -o allow_other
+   ```
+
+4. **Monitor Performance**:
+   ```bash
+   # Install monitoring tools
+   nix-env -iA nixos.htop nixos.iotop
+   ```
+
+## Testing in VMware Fusion
+
+To test this configuration in VMware Fusion:
+
+1. Download the latest NixOS ISO from https://nixos.org/download.html
+
+2. Create a new VM in VMware Fusion:
+   - Click "New" or File > New
+   - Choose "Install from disc or image"
+   - Select the downloaded NixOS ISO
+   - Choose "Linux" > "Other Linux 5.x kernel 64-bit"
+   - Configure VM settings:
+     - At least 4GB RAM
+     - At least 2 CPU cores
+     - 60GB disk space
+     - Enable 3D acceleration
+     - Network adapter: NAT
+
+3. Install NixOS:
+   ```bash
+   # Format the disk (assuming /dev/sda)
+   sudo parted /dev/sda -- mklabel gpt
+   sudo parted /dev/sda -- mkpart primary 512MB -8GB
+   sudo parted /dev/sda -- mkpart primary linux-swap -8GB 100%
+   sudo parted /dev/sda -- mkpart ESP fat32 1MB 512MB
+   sudo parted /dev/sda -- set 3 esp on
+
+   # Format partitions
+   sudo mkfs.ext4 -L nixos /dev/sda1
+   sudo mkswap -L swap /dev/sda2
+   sudo mkfs.fat -F 32 -n boot /dev/sda3
+
+   # Mount partitions
+   sudo mount /dev/disk/by-label/nixos /mnt
+   sudo mkdir -p /mnt/boot
+   sudo mount /dev/disk/by-label/boot /mnt/boot
+   sudo swapon /dev/sda2
+   ```
+
+4. Clone and activate the configuration:
+   ```bash
+   # Install git
+   nix-env -iA nixos.git
+
+   # Clone your configuration
+   git clone https://github.com/yourusername/nix-config.git /mnt/etc/nixos
+   
+   # Generate hardware configuration
+   sudo nixos-generate-config --root /mnt
+
+   # Copy the generated hardware-configuration.nix
+   cp /mnt/etc/nixos/hardware-configuration.nix /mnt/etc/nixos/modules/nixos/
+
+   # Install NixOS with your configuration
+   sudo nixos-install --flake .#nixos-vm
+   ```
+
+5. After installation:
+   - Remove the ISO from the VM
+   - Reboot
+   - Log in with username: `drodriguez` and password: `changeme`
+   - Change your password immediately using `passwd`
+
+Note: The configuration includes VMware-specific settings:
+- VMware guest tools
+- Proper display drivers
+- Network interface configuration
+- Shared folder support
+- Hardware acceleration support
+
 ## Maintenance
 
 ### Updating the System
