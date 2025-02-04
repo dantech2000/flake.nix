@@ -96,6 +96,8 @@
   # Fonts to be installed system-wide.
   fonts.packages = with pkgs; [
     pkgs.nerd-fonts.monaspace
+    pkgs.nerd-fonts.fira-code
+    pkgs.nerd-fonts.noto
   ];
 
   # Homebrew Casks
