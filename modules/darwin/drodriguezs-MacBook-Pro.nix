@@ -14,21 +14,31 @@
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
-  # nix.package = pkgs.nix;
 
   # Necessary for using flakes on this system.
   nix.settings = {
     trusted-users = [ "root" "drodriguez" ];
     experimental-features = "nix-command flakes";
   };
-  # nix.settings.experimental-features = "nix-command flakes";
-
 
   # Create /etc/zshrc that loads the nix-darwin environment.
-  programs.zsh.enable = true; # default shell on catalina
-  programs.zsh.enableFzfCompletion = true;
-  programs.zsh.enableFzfHistory = true;
-  programs.zsh.enableSyntaxHighlighting = true;
+  programs.zsh = {
+    enable = true;
+    enableFzfCompletion = true;
+    enableFzfHistory = true;
+    enableSyntaxHighlighting = true;
+    enableBashCompletion = true;
+    variables = {
+      SHELL = "${pkgs.zsh}/bin/zsh";
+    };
+  };
+
+  # Set default shell
+  environment.shells = with pkgs; [ zsh ];
+
+  # Add shell path
+  environment.systemPath = [ "/opt/homebrew/bin" ];
+  environment.pathsToLink = [ "/Applications" "/Applications/Utilities" "/Developer" "/Library" "/System" "/Users" "/Volumes" "/bin" "/etc" "/home" "/opt" "/private" "/sbin" "/tmp" "/usr" "/var" ];
 
   # OS Configurations
   system.defaults.NSGlobalDomain = {
@@ -65,13 +75,12 @@
       rm -rf /Applications/Nix\ Apps
       mkdir -p /Applications/Nix\ Apps
       find ${env}/Applications -maxdepth 1 -type l -exec readlink '{}' + |
-      while read src; do
+      while read -r src; do
         app_name=$(basename "$src")
         echo "copying $src" >&2
         ${pkgs.mkalias}/bin/mkalias "$src" "/Applications/Nix Apps/$app_name"
       done
     '';
-
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
@@ -86,13 +95,18 @@
 
   # Fonts to be installed system-wide.
   fonts.packages = with pkgs; [
-    nerdfonts
+    pkgs.nerd-fonts.monaspace
+    pkgs.nerd-fonts.fira-code
+    pkgs.nerd-fonts.noto
+    pkgs.nerd-fonts.jetbrains-mono
+    pkgs.nerd-fonts.symbols-only
   ];
 
   # Homebrew Casks
   homebrew = {
     enable = true;
     brews = [
+      "terraform"
       # "mas" is removed since it's automatically installed by masApps
     ];
     casks = [
@@ -125,12 +139,12 @@
       "session-manager-plugin"
       "slack"
       "spotify"
+      "thunderbird"
       "vagrant"
       "visual-studio-code"
       "vlc"
       "wezterm"
-      "zed"
-      "zoom"
+      "zen-browser"
     ];
     masApps = {
       "The Unarchiver" = 425424353;
@@ -146,5 +160,6 @@
   users.users.drodriguez = {
     name = "drodriguez";
     home = "/Users/drodriguez";
+    shell = pkgs.zsh;
   };
 }

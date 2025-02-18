@@ -1,0 +1,81 @@
+version: '3'
+
+vars:
+  FLAKE_NAME: drodriguezs-MacBook-Pro
+
+tasks:
+  default:
+    cmds:
+      - task -l
+    silent: true
+
+  switch:
+    desc: Rebuild and switch to the new configuration
+    cmds:
+      - darwin-rebuild switch --flake .#{{.FLAKE_NAME}}
+
+  update:
+    desc: Update flake inputs
+    cmds:
+      - nix flake update
+
+  history:
+    desc: Show the history of configurations
+    cmds:
+      - nix profile history --profile /nix/var/nix/profiles/system
+
+  gc:
+    desc: Garbage collect old generations
+    cmds:
+      - sudo nix-collect-garbage -d
+
+  rollback:
+    desc: Rollback to the previous generation
+    cmds:
+      - darwin-rebuild rollback
+
+  check:
+    desc: Check the configuration for errors
+    cmds:
+      - darwin-rebuild check --flake .#{{.FLAKE_NAME}}
+
+  build:
+    desc: Build the configuration without applying it (for testing)
+    cmds:
+      - darwin-rebuild build --flake .#{{.FLAKE_NAME}}
+      - echo "Build complete. You can safely remove the 'result' symlink with 'rm result'"
+
+  clean:
+    desc: Clean up old profiles and garbage collect
+    cmds:
+      - task: gc
+      - home-manager expire-generations "-30 days"
+      - sudo nix-env --delete-generations +10
+      - sudo nix store gc --debug
+
+  list-generations:
+    desc: List all system generations
+    cmds:
+      - sudo HOME=/Users/drodriguez nix-env --list-generations --profile /nix/var/nix/profiles/system
+
+  show-config:
+    desc: Show the current system configuration
+    cmds:
+      - darwin-rebuild show-config --flake .#{{.FLAKE_NAME}}
+
+  edit:
+    desc: Open the configuration in your editor
+    cmds:
+      - $EDITOR .
+
+  create-vm:
+    desc: Create a new NixOS VM using QEMU
+    cmds:
+      - |
+        nix build .#nixosConfigurations.nixos-vm.config.system.build.vm
+        ./result/bin/run-nixos-vm
+
+  build-vm:
+    desc: Build the VM configuration without running it
+    cmds:
+      - nix build .#nixosConfigurations.nixos-vm.config.system.build.vm
