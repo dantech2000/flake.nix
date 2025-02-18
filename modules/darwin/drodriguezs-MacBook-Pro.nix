@@ -35,7 +35,7 @@
 
   # Set default shell
   environment.shells = with pkgs; [ zsh ];
-  
+
   # Add shell path
   environment.systemPath = [ "/opt/homebrew/bin" ];
   environment.pathsToLink = [ "/Applications" "/Applications/Utilities" "/Developer" "/Library" "/System" "/Users" "/Volumes" "/bin" "/etc" "/home" "/opt" "/private" "/sbin" "/tmp" "/usr" "/var" ];
@@ -98,6 +98,8 @@
     pkgs.nerd-fonts.monaspace
     pkgs.nerd-fonts.fira-code
     pkgs.nerd-fonts.noto
+    pkgs.nerd-fonts.jetbrains-mono
+    pkgs.nerd-fonts.symbols-only
   ];
 
   # Homebrew Casks
@@ -137,12 +139,12 @@
       "session-manager-plugin"
       "slack"
       "spotify"
+      "thunderbird"
       "vagrant"
       "visual-studio-code"
       "vlc"
       "wezterm"
-      "zed"
-      "zoom"
+      "zen-browser"
     ];
     masApps = {
       "The Unarchiver" = 425424353;

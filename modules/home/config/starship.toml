@@ -1,95 +1,87 @@
-# Get editor completions based on the config schema
-"$schema" = 'https://starship.rs/config-schema.json'
-
 format = """
+[░▒▓](#a3aed2)\
+[  ](bg:#a3aed2 fg:#090c0c)\
+[](bg:#769ff0 fg:#a3aed2)\
 $directory\
+[](fg:#769ff0 bg:#394260)\
 $git_branch\
 $git_status\
-$nix_shell\
+[](fg:#394260 bg:#212736)\
 $nodejs\
 $rust\
 $golang\
+$php\
 $python\
-$docker_context\
-$cmd_duration\
-$line_break\
-$character"""
+$ruby\
+$aws\
+[](fg:#212736 bg:#1d2230)\
+$time\
+[ ](fg:#1d2230)\
+\n$character"""
 
-# Core prompt symbols
-[character]
-success_symbol = "[❯](green)"
-error_symbol = "[❯](red)"
-vimcmd_symbol = "[❮](green)"
-
-# Directory
 [directory]
-style = "blue bold"
-read_only = " 🔒"
-truncation_length = 4
-truncate_to_repo = true
-format = "[$path]($style)[$read_only]($read_only_style) "
+style = "fg:#e3e5e5 bg:#769ff0"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
 
-# Git
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+
 [git_branch]
-format = "[$symbol$branch]($style) "
-symbol = "🌱 "
-style = "bright-black"
+symbol = ""
+style = "bg:#394260"
+format = '[[ $symbol $branch ](fg:#769ff0 bg:#394260)]($style)'
 
 [git_status]
-format = '([\[$all_status$ahead_behind\]]($style) )'
-style = "cyan"
-conflicted = "⚔️ "
-ahead = "⇡${count}"
-behind = "⇣${count}"
-diverged = "⇕⇡${ahead_count}⇣${behind_count}"
-untracked = "?${count}"
-stashed = "📦"
-modified = "📝${count}"
-staged = "✓${count}"
-renamed = "»${count}"
-deleted = "✘${count}"
+style = "bg:#394260"
+format = '[[($all_status$ahead_behind )](fg:#769ff0 bg:#394260)]($style)'
 
-# Nix Shell
-[nix_shell]
-format = 'via [❄️ $name](bold blue) '
-heuristic = true
-
-# Language versions
 [nodejs]
-format = "[$symbol($version )]($style)"
-symbol = "⬢ "
-style = "bold green"
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
 
 [rust]
-format = "[$symbol($version )]($style)"
-symbol = "🦀 "
-style = "bold red"
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
 
 [golang]
-format = "[$symbol($version )]($style)"
-symbol = "🐹 "
-style = "bold cyan"
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[php]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
 
 [python]
-format = "[$symbol($version )]($style)"
-symbol = "🐍 "
-style = "bold yellow"
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
 
-# Docker
-[docker_context]
-format = "via [🐋 $context](blue bold) "
+[ruby]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
 
-# Command duration
-[cmd_duration]
-format = "took [$duration](bold yellow)"
-min_time = 500
+[nix_shell]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
 
-# Disable certain modules
-[hostname]
-disabled = true
+[aws]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($profile) ($duration) ](fg:#769ff0 bg:#212736)]($style)'
 
-[username]
-disabled = true
-
-[package]
-disabled = true
+[time]
+disabled = false
+time_format = "%R"                                      # Hour:Minute Format
+style = "bg:#1d2230"
+format = '[[  $time ](fg:#a0a9cb bg:#1d2230)]($style)'
