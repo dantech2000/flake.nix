@@ -52,6 +52,7 @@
     jetbrains-mono
     just
     kind
+    krew
     kubecolor
     kubectl
     kubectx
@@ -63,12 +64,14 @@
     mongosh
     neofetch
     packer
+    pipenv
     pulumi-bin
     redis
     redli
     ripgrep
     shellcheck
     sshpass
+    stern
     stow
     sqlite
     terraform-ls
@@ -103,7 +106,7 @@
     GPG_TTY = "$(tty)";
     CARAPACE_BRIDGES = "zsh,fish,bash,inshellisense";
     STARSHIP_CONFIG = "$HOME/.config/starship/starship.toml";
-    
+
     # Additional environment variables
     XDG_CONFIG_HOME = "$HOME/.config";
     ZDOTDIR = "$HOME/.config/zsh";
