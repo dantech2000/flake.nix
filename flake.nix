@@ -51,11 +51,16 @@
           }
           home-manager.nixosModules.home-manager
           (sharedModules // {
-            home-manager.users.${user} = {
-              imports = [
-                ./modules/home
-                ./modules/neovim
-              ];
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              backupFileExtension = "backup";
+              users.${user} = {
+                imports = [
+                  ./modules/home
+                  ./modules/neovim
+                ];
+              };
             };
           })
         ] ++ extraModules;
@@ -67,7 +72,6 @@
         specialArgs = { inherit inputs user hostname; };
         modules = [
           ./modules/darwin/${hostname}.nix
-          { nixpkgs = nixpkgsConfig; }
           home-manager.darwinModules.home-manager
           (sharedModules // {
             home-manager = {
@@ -79,7 +83,6 @@
                   ./modules/home
                   ./modules/neovim
                 ];
-                nixpkgs = nixpkgsConfig;
               };
             };
           })

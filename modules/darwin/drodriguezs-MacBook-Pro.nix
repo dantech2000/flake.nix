@@ -13,13 +13,16 @@
     ];
 
   # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
+  nix.enable = true;
 
   # Necessary for using flakes on this system.
   nix.settings = {
     trusted-users = [ "root" "drodriguez" ];
     experimental-features = "nix-command flakes";
   };
+
+  # Fix for nixbld group GID mismatch
+  ids.gids.nixbld = 30000;
 
   # Create /etc/zshrc that loads the nix-darwin environment.
   programs.zsh = {
@@ -91,7 +94,7 @@
   nixpkgs.config.allowUnfree = true;
 
   # This enables touch id authentication for sudo.
-  security.pam.enableSudoTouchIdAuth = true;
+  security.pam.services.sudo_local.touchIdAuth = true;
 
   # Fonts to be installed system-wide.
   fonts.packages = with pkgs; [
@@ -139,6 +142,7 @@
       "session-manager-plugin"
       "slack"
       "spotify"
+      "todoist"
       "thunderbird"
       "vagrant"
       "visual-studio-code"
