@@ -18,6 +18,7 @@
   home.packages = with pkgs; [
     act
     bat
+    bun
     carapace
     cookiecutter
     coreutils-full

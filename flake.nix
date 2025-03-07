@@ -3,14 +3,14 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    
+
     # Darwin dependencies
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-    
+
     # NixOS dependencies
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-    
+
     # Shared dependencies
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
@@ -20,7 +20,7 @@
   outputs = { self, nix-darwin, home-manager, nixpkgs, nixos-hardware, flake-utils, ... }@inputs:
     let
       inherit (flake-utils.lib) eachDefaultSystem;
-      
+
       # Shared configuration for both Darwin and NixOS
       sharedModules = {
         home-manager.useGlobalPkgs = true;
@@ -36,7 +36,7 @@
       };
 
       # Function to create system-specific configurations
-      mkSystemConfig = { system, hostname, user, extraModules ? [] }: {
+      mkSystemConfig = { system, hostname, user, extraModules ? [ ] }: {
         inherit system;
         specialArgs = { inherit inputs user hostname; };
         modules = [
@@ -51,16 +51,11 @@
           }
           home-manager.nixosModules.home-manager
           (sharedModules // {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              backupFileExtension = "backup";
-              users.${user} = {
-                imports = [
-                  ./modules/home
-                  ./modules/neovim
-                ];
-              };
+            home-manager.users.${user} = {
+              imports = [
+                ./modules/home
+                ./modules/neovim
+              ];
             };
           })
         ] ++ extraModules;
@@ -72,6 +67,7 @@
         specialArgs = { inherit inputs user hostname; };
         modules = [
           ./modules/darwin/${hostname}.nix
+          { nixpkgs = nixpkgsConfig; }
           home-manager.darwinModules.home-manager
           (sharedModules // {
             home-manager = {
@@ -83,6 +79,7 @@
                   ./modules/home
                   ./modules/neovim
                 ];
+                nixpkgs = nixpkgsConfig;
               };
             };
           })
@@ -113,7 +110,7 @@
           # Additional development tools
           nixUnstable
           alejandra # Alternative Nix formatter
-          statix    # Nix linter
+          statix # Nix linter
         ];
         shellHook = ''
           export SHELL=${nixpkgs.legacyPackages.${system}.zsh}/bin/zsh
