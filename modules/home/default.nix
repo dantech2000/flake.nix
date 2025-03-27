@@ -65,7 +65,7 @@
     mongosh
     neofetch
     packer
-    pipenv
+    pinact
     pulumi-bin
     redis
     redli
@@ -85,6 +85,7 @@
     trivy
     unixODBC
     unzip
+    uv
     wget
     yarn
     yq
