@@ -110,6 +110,8 @@
     enable = true;
     brews = [
       "terraform"
+      "libpq"
+      "snappy"
       # "mas" is removed since it's automatically installed by masApps
     ];
     casks = [

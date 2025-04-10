@@ -17,6 +17,7 @@
   # environment.
   home.packages = with pkgs; [
     act
+    asdf-vm
     bat
     bun
     carapace
@@ -66,10 +67,12 @@
     neofetch
     packer
     pinact
+    pnpm
     pulumi-bin
     redis
     redli
     ripgrep
+    rustup
     shellcheck
     sshpass
     stern
@@ -134,6 +137,10 @@
     initExtra = ''
       # For Debugging (commented out by default)
       # set -x
+               
+      # ASDF Init
+      . "$HOME/.asdf/asdf.sh"
+      . "$HOME/.asdf/completions/asdf.bash"
 
       # Set variable for current user
       local username="''${USER:-$(whoami)}"
@@ -161,6 +168,9 @@
       export PATH="/usr/local/opt/llvm/bin/clangd:/Library/Frameworks/Python.framework/Versions/3.7/bin:$PATH"
       export PATH="$GOROOT/bin:$PATH"
       export PATH="$PATH:$GOPATH/bin"
+       
+      # Add Asdf shims
+      export PATH="${"$"}{ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
     '';
 
     shellAliases = {
