@@ -85,35 +85,68 @@ This repository contains my personal Nix configuration for macOS, using nix-darw
 - macOS
 - Command Line Tools for Xcode: `xcode-select --install`
 
-## Installation
+## Installation on macOS Sequoia
 
-1. **Install Nix**
+### 1. Install Nix (Recommended: Determinate Systems Installer)
+
+On macOS Sequoia, use the Determinate Systems installer for best compatibility:
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh
+```
+- This installer sets up the multi-user daemon, enables flakes, and works seamlessly with macOS Sequoia.
+- After installation, restart your terminal.
+
+### 2. Install nix-darwin
+
+```bash
+nix run github:LnL7/nix-darwin --extra-experimental-features 'nix-command flakes'
+```
+- Follow the prompts to complete installation.
+- You may need to add `/nix/var/nix/profiles/default/bin` to your `PATH` temporarily.
+
+### 3. Clone This Configuration
+
+```bash
+git clone https://github.com/dantech2000/flake.nix.git ~/.config/nix-darwin
+cd ~/.config/nix-darwin
+```
+
+### 4. Configure for Your Mac (New Host)
+
+If you are setting up a new Mac:
+1. Copy the host configuration file:
    ```bash
-   curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh
+   cp modules/darwin/drodriguezs-MacBook-Pro.nix modules/darwin/<your-new-hostname>.nix
    ```
-   This installer provides several advantages:
-   - Automatic system configuration
-   - Automatic daemon installation and startup
-   - Built-in support for Flakes
-   - Easy uninstallation if needed
-
-2. **Clone this repository**
-   ```bash
-   git clone https://github.com/dantech2000/flake.nix.git ~/.config/nix-darwin
-   cd ~/.config/nix-darwin
-   ```
-
-3. **Build and activate the configuration**
-   ```bash
-   # First time setup
-   nix build .#darwinConfigurations.drodriguezs-MacBook-Pro.system
-   ./result/sw/bin/darwin-rebuild switch --flake .#drodriguezs-MacBook-Pro
-
-   # Subsequent updates
-   darwin-rebuild switch --flake .#drodriguezs-MacBook-Pro
+2. Edit the new file and set `networking.hostName = "<your-new-hostname>";` to match your Mac's hostname.
+3. Edit `flake.nix` and add a new entry under `darwinConfigurations`:
+   ```nix
+   darwinConfigurations = {
+     "drodriguezs-MacBook-Pro" = mkDarwinConfig { ... };
+     "<your-new-hostname>" = mkDarwinConfig {
+       system = "arm64-darwin"; # or "x86_64-darwin" for Intel
+       hostname = "<your-new-hostname>";
+       user = "<your-username>";
+     };
+   };
    ```
 
-   Note: The Determinate Systems installer enables flakes by default, so no additional configuration is needed.
+### 5. Build and Activate the Configuration
+
+```bash
+nix build .#darwinConfigurations.<your-new-hostname>.system
+./result/sw/bin/darwin-rebuild switch --flake .#<your-new-hostname>
+```
+For subsequent updates:
+```bash
+darwin-rebuild switch --flake .#<your-new-hostname>
+```
+
+**Note:**
+- Make sure your hostname matches the one in your configuration. You can check it with `scutil --get HostName` or change it via `sudo scutil --set HostName <your-new-hostname>`.
+- The Determinate Systems installer enables flakes by default; no extra flake setup is needed.
+- For Apple Silicon (M1/M2/M3), use `system = "arm64-darwin"` in your flake.
 
 ## Directory Structure
 
@@ -439,7 +472,7 @@ Note: The configuration includes VMware-specific settings:
 git pull origin main
 
 # Update and switch to new configuration
-darwin-rebuild switch --flake .#drodriguezs-MacBook-Pro
+darwin-rebuild switch --flake .#<your-new-hostname>
 ```
 
 ### Cleaning Up
