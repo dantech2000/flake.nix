@@ -108,11 +108,18 @@
   # Homebrew Casks
   homebrew = {
     enable = true;
+    taps = [
+      {
+        name = "shopify/shopify";
+        clone_target = "https://github.com/Shopify/homebrew-shopify";
+        force_auto_update = false;
+      }
+    ];
     brews = [
       "terraform"
       "libpq"
       "snappy"
-      # "mas" is removed since it's automatically installed by masApps
+      "shopify-cli"
     ];
     casks = [
       "1password-cli"
