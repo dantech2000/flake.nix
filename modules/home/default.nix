@@ -58,8 +58,7 @@
     kubecolor
     kubectl
     kubectx
-    kubernetes-helm
-    kubernetes-helmPlugins.helm-diff
+    (pkgs.wrapHelm pkgs.kubernetes-helm { plugins = [ pkgs.kubernetes-helmPlugins.helm-diff ]; })
     libheif
     libxslt
     monaspace
