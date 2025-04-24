@@ -16,8 +16,12 @@
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
+    (pkgs.wrapHelm pkgs.kubernetes-helm { plugins = [ pkgs.kubernetes-helmPlugins.helm-diff ]; })
     act
+    ansible-lint
     asdf-vm
+    automake
+    awscli2
     bat
     bun
     carapace
@@ -25,40 +29,33 @@
     coreutils-full
     curl
     devbox
+    devenv
     direnv
+    dnsmasq
     eza
+    ffmpeg_7
+    findutils
     fzf
     gh
     gnugrep
     gnupg
+    gnused
+    go
     go-task
     goreleaser
     hello
+    helmfile-wrapped
     htop
+    imagemagick
+    jetbrains-mono
     jq
     just
     k9s
-    ansible-lint
-    asdf-vm
-    automake
-    awscli2
-    coreutils-full
-    dnsmasq
-    ffmpeg_7
-    findutils
-    gnused
-    helmfile-wrapped
-    devenv
-    go
-    imagemagick
-    jetbrains-mono
-    just
     kind
     krew
     kubecolor
     kubectl
     kubectx
-    (pkgs.wrapHelm pkgs.kubernetes-helm { plugins = [ pkgs.kubernetes-helmPlugins.helm-diff ]; })
     libheif
     libxslt
     monaspace
@@ -67,16 +64,16 @@
     packer
     pinact
     pnpm
-    pulumi-bin
+    zsh-powerlevel10k
     redis
     redli
     ripgrep
     rustup
     shellcheck
+    sqlite
     sshpass
     stern
     stow
-    sqlite
     terraform-ls
     terraformer
     tflint
@@ -113,7 +110,7 @@
 
     # Additional environment variables
     XDG_CONFIG_HOME = "$HOME/.config";
-    ZDOTDIR = "$HOME/.config/zsh";
+    # ZDOTDIR = "$HOME/.config/zsh";
     ZSH_COMPDUMP = "$HOME/.cache/zsh/.zcompdump";
     LC_ALL = "en_US.UTF-8";
     LESS = "-R";
@@ -131,18 +128,22 @@
     initExtraFirst = ''
       # Set umask
       umask 022
+      # Suppress Powerlevel10k instant prompt errors
+      typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+      # Powerlevel10k instant prompt (keep at the top for performance reasons)
+      local username="''${USER:-$(whoami)}"
+      if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${username}.zsh" ]]; then
+        source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${username}.zsh"
+      fi
     '';
 
     initExtra = ''
       # For Debugging (commented out by default)
       # set -x
-               
-      # ASDF Init
-      . "$HOME/.asdf/asdf.sh"
-      . "$HOME/.asdf/completions/asdf.bash"
-
-      # Set variable for current user
-      local username="''${USER:-$(whoami)}"
+      eval "$(/opt/homebrew/bin/brew shellenv)"         
+      # ASDF Init (guarded)
+      [ -f "$HOME/.asdf/asdf.sh" ] && . "$HOME/.asdf/asdf.sh"
+      [ -f "$HOME/.asdf/completions/asdf.bash" ] && . "$HOME/.asdf/completions/asdf.bash"
 
       # History and completion settings
       setopt autocd interactive_comments INC_APPEND_HISTORY
@@ -162,12 +163,22 @@
       source <(carapace _carapace)
       zstyle ':completion:*:git:*' group-order 'main commands' 'alias commands' 'external commands'
 
+      # Powerlevel10k theme from Nix package (correct path)
+      source "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme"
+      if [ -f "$HOME/.p10k.zsh" ]; then
+        source "$HOME/.p10k.zsh"
+      fi
+
       # Add additional paths
       export PATH="/usr/local/bin:/usr/local/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
       export PATH="/usr/local/opt/llvm/bin/clangd:/Library/Frameworks/Python.framework/Versions/3.7/bin:$PATH"
       export PATH="$GOROOT/bin:$PATH"
       export PATH="$PATH:$GOPATH/bin"
-       
+      export PATH="/Applications/Windsurf.app/Contents/MacOS:$PATH"
+
+      [ -e /usr/local/bin/windsurf ] || ln -s /Applications/Windsurf.app/Contents/MacOS/Electron /usr/local/bin/windsurf
+      source <(fzf --zsh)
+
       # Add Asdf shims
       export PATH="${"$"}{ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
     '';
@@ -204,10 +215,23 @@
     };
   };
 
+
   # Starship Configuration
   programs.starship = {
     enable = true;
     enableZshIntegration = true;
+  };
+
+  # Git Configuration
+  programs.git = {
+  enable = true;
+  userName = "Daniel Rodriguez";
+  userEmail = "drodriguez@codecademy.com";
+    extraConfig = {
+      github.user = "dantech2000";
+      init = { defaultBranch = "trunk"; };
+      diff = { external = "${pkgs.difftastic}/bin/difft"; };
+    };
   };
 
   # XDG Configuration Files

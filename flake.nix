@@ -125,6 +125,11 @@
           hostname = "drodriguezs-MacBook-Pro";
           user = "drodriguez";
         };
+        "MAC-RNJMGYX0J5" = mkDarwinConfig {
+          system = "arm64-darwin";
+          hostname = "MAC-RNJMGYX0J5";
+          user = "drodriguez";
+        };
       };
 
       # NixOS Configurations
@@ -139,5 +144,6 @@
 
       # Add packages output for compatibility
       packages.x86_64-darwin.default = self.darwinConfigurations."drodriguezs-MacBook-Pro".system;
+      packages.arm64-darwin.defualt = self.darwinConfigurations."MAC-RNJMGYX0J5".system;
     };
 }
