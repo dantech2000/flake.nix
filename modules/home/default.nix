@@ -165,10 +165,10 @@
 
       # Powerlevel10k theme from Nix package (correct path)
       source "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme"
-      if [ -f "$HOME/.p10k.zsh" ]; then
-        source "$HOME/.p10k.zsh"
+      if [ -f "$XDG_CONFIG_HOME/p10k/p10k.zsh" ]; then
+        source "$XDG_CONFIG_HOME/p10k/p10k.zsh"
       fi
-
+      
       # Add additional paths
       export PATH="/usr/local/bin:/usr/local/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
       export PATH="/usr/local/opt/llvm/bin/clangd:/Library/Frameworks/Python.framework/Versions/3.7/bin:$PATH"
@@ -215,6 +215,9 @@
     };
   };
 
+
+  # Powerlevel10k config managed by Nix
+  xdg.configFile."p10k/p10k.zsh".source = ./config/p10k/p10k.zsh;
 
   # Starship Configuration
   programs.starship = {
