@@ -10,6 +10,7 @@
       pkgs.mkalias
       pkgs.nixpkgs-fmt
       pkgs.nodejs
+      pkgs.gitAndTools.gitFull  
     ];
 
   # Auto upgrade nix package and the daemon service.
@@ -160,6 +161,7 @@
       "session-manager-plugin"
       "slack"
       "spotify"
+      "telegram"
       "todoist"
       "vagrant"
       "visual-studio-code"
