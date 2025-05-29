@@ -5,12 +5,13 @@
   # $ nix-env -qaP | grep wget
   environment.systemPackages =
     [
+      pkgs.aws-sam-cli
       pkgs.vim
       pkgs.starship
       pkgs.mkalias
       pkgs.nixpkgs-fmt
       pkgs.nodejs
-      pkgs.gitAndTools.gitFull  
+      pkgs.gitAndTools.gitFull
     ];
 
   # Auto upgrade nix package and the daemon service.
@@ -124,12 +125,22 @@
         clone_target = "https://github.com/Shopify/homebrew-shopify";
         force_auto_update = false;
       }
+      {
+        name = "hashicorp/tap";
+        clone_target = "https://github.com/hashicorp/homebrew-tap";
+      }
+      {
+        name = "dantech2000/tap";
+        clone_target = "https://github.com/dantech2000/homebrew-tap";
+        force_auto_update = true;
+      }
     ];
     brews = [
-      "terraform"
       "libpq"
       "snappy"
-      "shopify-cli"
+      "shopify/shopify/shopify-cli"
+      "tfenv"
+      "refresh"
     ];
     casks = [
       "1password-cli"
@@ -137,6 +148,7 @@
       "arc"
       "aws-vault"
       "contour"
+      "cursor"
       "brave-browser"
       "devtoys"
       "displaylink"
@@ -152,9 +164,9 @@
       "hammerspoon"
       "iina"
       "insomnia"
-      "iterm2"
       "legcord"
       "notion"
+      "ngrok"
       "obsidian"
       "rectangle"
       "raycast"
@@ -166,7 +178,7 @@
       "vagrant"
       "visual-studio-code"
       "vlc"
-      "zen-browser"
+      "zen"
     ];
   };
 
