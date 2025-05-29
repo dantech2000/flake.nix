@@ -91,7 +91,6 @@
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "x86_64-darwin";
-  nixpkgs.config.allowUnfree = true;
 
   # This enables touch id authentication for sudo.
   security.pam.services.sudo_local.touchIdAuth = true;

@@ -79,7 +79,6 @@
                   ./modules/home
                   ./modules/neovim
                 ];
-                nixpkgs = nixpkgsConfig;
               };
             };
           })
