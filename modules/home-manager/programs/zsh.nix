@@ -1,121 +1,26 @@
 { config, pkgs, lib, ... }:
 
 {
-  # Home Manager needs a bit of information about you and the paths it should
-  # manage.
-
-  # This value determines the Home Manager release that your configuration is
-  # compatible with. This helps avoid breakage when a new Home Manager release
-  # introduces backwards incompatible changes.
-  #
-  # You should not change this value, even if you update Home Manager. If you do
-  # want to update the value, then make sure to first check the Home Manager
-  # release notes.
-  home.stateVersion = "25.05"; # Please read the comment before changing.
-
-  # The home.packages option allows you to install Nix packages into your
-  # environment.
+  # ZSH-related packages
   home.packages = with pkgs; [
-    (pkgs.wrapHelm pkgs.kubernetes-helm { plugins = [ pkgs.kubernetes-helmPlugins.helm-diff ]; })
-    act
-    ansible-lint
-    asdf-vm
-    automake
-    awscli2
-    bat
-    bun
-    carapace
-    cookiecutter
-    coreutils-full
-    curl
-    devbox
-    devenv
-    direnv
-    dnsmasq
-    eza
-    ffmpeg_7
-    findutils
-    fzf
-    gh
-    gnugrep
-    gnupg
-    gnused
-    go
-    go-task
-    goreleaser
-    hello
-    helmfile-wrapped
-    htop
-    imagemagick
-    jetbrains-mono
-    jq
-    just
-    k9s
-    kind
-    krew
-    kubecolor
-    kubectl
-    kubectx
-    libheif
-    libxslt
-    monaspace
-    mongosh
-    neofetch
-    packer
-    pinact
-    pnpm
-    zsh-powerlevel10k
-    redis
-    redli
-    ripgrep
-    rustup
-    shellcheck
-    sqlite
-    sshpass
-    stern
-    stow
-    terraform-ls
-    terraformer
-    tflint
-    time
-    tldr
-    tmux
-    tree
-    trivy
-    unixODBC
-    unzip
-    uv
-    wget
-    yarn
-    yq
-    yt-dlp
-    zlib
-    zoxide
     zsh
+    zsh-powerlevel10k
     zsh-autosuggestions
     zsh-fzf-history-search
     zsh-fzf-tab
     zsh-syntax-highlighting
+    carapace
+    fzf
   ];
 
+  # ZSH-related session variables
   home.sessionVariables = {
-    EDITOR = "nvim";
     SHELL = "${pkgs.zsh}/bin/zsh";
-    GOPATH = "$HOME/go";
     FZF_DEFAULT_COMMAND = "rg --files --hidden --follow --no-ignore-vcs";
     FZF_DEFAULT_OPTS = "--height 40% --layout=reverse --border";
-    GPG_TTY = "$(tty)";
     CARAPACE_BRIDGES = "zsh,fish,bash,inshellisense";
     STARSHIP_CONFIG = "$HOME/.config/starship/starship.toml";
-
-    # Additional environment variables
-    XDG_CONFIG_HOME = "$HOME/.config";
-    # ZDOTDIR = "$HOME/.config/zsh";
     ZSH_COMPDUMP = "$HOME/.cache/zsh/.zcompdump";
-    LC_ALL = "en_US.UTF-8";
-    LESS = "-R";
-    SSH_CONFIG_DIR = "$HOME/.config/ssh";
-    PYTHONDONTWRITEBYTECODE = "1";
   };
 
   # ZSH Configuration
@@ -215,9 +120,8 @@
     };
   };
 
-
   # Powerlevel10k config managed by Nix
-  xdg.configFile."p10k/p10k.zsh".source = ./config/p10k/p10k.zsh;
+  xdg.configFile."p10k/p10k.zsh".source = ../config/p10k/p10k.zsh;
 
   # Starship Configuration
   programs.starship = {
@@ -225,26 +129,6 @@
     enableZshIntegration = true;
   };
 
-  # Git Configuration
-  programs.git = {
-  enable = true;
-  userName = "Daniel Rodriguez";
-  userEmail = "drodriguez@codecademy.com";
-    extraConfig = {
-      github.user = "dantech2000";
-      init = { defaultBranch = "trunk"; };
-      diff = { external = "${pkgs.difftastic}/bin/difft"; };
-    };
-  };
-
-  # XDG Configuration Files
-  xdg.configFile."starship/starship.toml".source = ./config/starship.toml;
-
-  # Let Home Manager install and manage itself.
-  programs.home-manager.enable = true;
-
-  # OS Configurations
-  targets.darwin.defaults = lib.mkIf pkgs.stdenv.isDarwin {
-    "com.apple.desktopservices".DSDontWriteNetworkStores = true;
-  };
-}
+  # XDG Configuration Files for starship
+  xdg.configFile."starship/starship.toml".source = ../config/starship/starship.toml;
+} 

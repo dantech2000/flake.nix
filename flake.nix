@@ -76,8 +76,7 @@
               backupFileExtension = "backup";
               users.${user} = {
                 imports = [
-                  ./modules/home
-                  ./modules/neovim
+                  ./modules/home-manager
                 ];
               };
             };

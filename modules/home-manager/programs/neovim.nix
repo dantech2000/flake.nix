@@ -137,6 +137,6 @@ in
   };
 
   xdg.configFile."nvim" = {
-    source = config.lib.file.mkOutOfStoreSymlink ./config;
+    source = config.lib.file.mkOutOfStoreSymlink ./neovim/config;
   };
 }
