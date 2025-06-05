@@ -7,4 +7,4 @@
     home = "/Users/${user}";
     shell = pkgs.zsh;
   };
-} 
+}

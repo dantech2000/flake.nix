@@ -13,7 +13,7 @@ _:
       brewfile = true;
       lockfiles = true;
     };
-    
+
     # Homebrew Taps
     taps = [
       {
@@ -31,7 +31,7 @@ _:
         force_auto_update = true;
       }
     ];
-    
+
     # Homebrew Formulae
     brews = [
       "libpq"
@@ -40,7 +40,7 @@ _:
       "tfenv"
       "refresh"
     ];
-    
+
     # Homebrew Casks
     casks = [
       "1password-cli"
@@ -81,4 +81,4 @@ _:
       "zen"
     ];
   };
-} 
+}

@@ -5,23 +5,23 @@
   environment = {
     shells = with pkgs; [ zsh ];
     systemPath = [ "/opt/homebrew/bin" ];
-    pathsToLink = [ 
-      "/Applications" 
-      "/Applications/Utilities" 
-      "/Developer" 
-      "/Library" 
-      "/System" 
-      "/Users" 
-      "/Volumes" 
-      "/bin" 
-      "/etc" 
-      "/home" 
-      "/opt" 
-      "/private" 
-      "/sbin" 
-      "/tmp" 
-      "/usr" 
-      "/var" 
+    pathsToLink = [
+      "/Applications"
+      "/Applications/Utilities"
+      "/Developer"
+      "/Library"
+      "/System"
+      "/Users"
+      "/Volumes"
+      "/bin"
+      "/etc"
+      "/home"
+      "/opt"
+      "/private"
+      "/sbin"
+      "/tmp"
+      "/usr"
+      "/var"
     ];
   };
 
@@ -48,4 +48,4 @@
   };
 
 
-} 
+}

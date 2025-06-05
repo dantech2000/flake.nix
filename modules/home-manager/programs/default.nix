@@ -7,4 +7,4 @@
     ./development.nix
     ./cli-tools.nix
   ];
-} 
+}

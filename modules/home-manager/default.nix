@@ -24,4 +24,4 @@
   targets.darwin.defaults = lib.mkIf pkgs.stdenv.isDarwin {
     "com.apple.desktopservices".DSDontWriteNetworkStores = true;
   };
-} 
+}

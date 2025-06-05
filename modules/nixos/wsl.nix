@@ -7,7 +7,7 @@
     defaultUser = "drodriguez";
     # Enable native systemd support
     nativeSystemd = true;
-    
+
     # WSL configuration
     wslConf = {
       # Enable integration with Windows paths

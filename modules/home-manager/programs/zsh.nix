@@ -131,4 +131,4 @@
 
   # XDG Configuration Files for starship
   xdg.configFile."starship/starship.toml".source = ../config/starship/starship.toml;
-} 
+}

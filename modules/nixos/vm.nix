@@ -14,8 +14,8 @@
     useDHCP = true;
     # Enable VMware's network interfaces
     interfaces = {
-      ens33.useDHCP = true;  # Common VMware interface name
-      ens34.useDHCP = true;  # Secondary interface if needed
+      ens33.useDHCP = true; # Common VMware interface name
+      ens34.useDHCP = true; # Secondary interface if needed
     };
   };
 
@@ -38,7 +38,7 @@
 
       # VMware display settings
       videoDrivers = [ "vmware" ];
-      
+
       # Better resolution handling
       resolutions = [
         { x = 1920; y = 1080; }
@@ -58,8 +58,8 @@
     wget
     git
     curl
-    open-vm-tools        # VMware tools
-    xorg.xrandr         # For display management
+    open-vm-tools # VMware tools
+    xorg.xrandr # For display management
   ];
 
   # Set your time zone
@@ -93,7 +93,7 @@
   users.users.drodriguez = {
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" "video" "audio" ];
-    initialPassword = "changeme";  # Remember to change this on first login
+    initialPassword = "changeme"; # Remember to change this on first login
   };
 
   # Enable sudo without password for wheel group
