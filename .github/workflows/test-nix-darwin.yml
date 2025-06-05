@@ -92,6 +92,9 @@ jobs:
     - name: Install Nix
       uses: DeterminateSystems/nix-installer-action@main
 
+    - name: Enable Nix Magic Cache
+      uses: DeterminateSystems/magic-nix-cache-action@main
+
     - name: Check with statix
       run: |
         nix profile install nixpkgs#statix
@@ -109,12 +112,16 @@ jobs:
 
   security-check:
     runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       
     - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@master
+      uses: aquasecurity/trivy-action@0.28.0
       with:
         scan-type: 'fs'
         scan-ref: '.'
