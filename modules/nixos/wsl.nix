@@ -1,18 +1,26 @@
 # WSL-specific configuration
-{ config, pkgs, lib, ... }:
+{ pkgs, ... }:
 
 {
   wsl = {
     enable = true;
     defaultUser = "drodriguez";
-    # Enable integration with Windows paths
-    wslConf.automount.root = "/mnt";
-    wslConf.automount.options = "metadata";
-    # Enable integration with Windows system
-    wslConf.interop.enabled = true;
-    wslConf.interop.appendWindowsPath = true;
     # Enable native systemd support
     nativeSystemd = true;
+    
+    # WSL configuration
+    wslConf = {
+      # Enable integration with Windows paths
+      automount = {
+        root = "/mnt";
+        options = "metadata";
+      };
+      # Enable integration with Windows system
+      interop = {
+        enabled = true;
+        appendWindowsPath = true;
+      };
+    };
   };
 
   # WSL-specific system configuration

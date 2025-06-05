@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ pkgs, config, ... }:
 
 {
   # System packages installed in system profile

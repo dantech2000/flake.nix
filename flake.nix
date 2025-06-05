@@ -31,7 +31,7 @@
       nixpkgsConfig = {
         config = {
           allowUnfree = true;
-          allowUnfreePredicate = (_: true);
+          allowUnfreePredicate = _: true;
         };
       };
 
@@ -106,7 +106,7 @@
           nil # Nix LSP
           zsh
           # Additional development tools
-          nixUnstable
+          nixVersions.git
           alejandra # Alternative Nix formatter
           statix # Nix linter
         ];

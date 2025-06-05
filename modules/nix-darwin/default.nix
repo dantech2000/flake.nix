@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, user, hostname, ... }:
+{ hostname, ... }:
 
 {
   # Complete modular nix-darwin configuration

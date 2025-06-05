@@ -1,20 +1,13 @@
 # VMware-specific NixOS configuration
-{ config, pkgs, lib, ... }:
+{ config, pkgs, ... }:
 
 {
-  # Enable OpenSSH daemon
-  services.openssh.enable = true;
-
   # Basic system configuration
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
   # VMware-specific settings
   virtualisation.vmware.guest.enable = true;
-  services.vmware.guest = {
-    enable = true;
-    headless = false;
-  };
 
   # Network configuration
   networking = {
@@ -26,21 +19,33 @@
     };
   };
 
-  # Enable X11 and basic desktop environment
-  services.xserver = {
-    enable = true;
-    displayManager.gdm.enable = true;
-    desktopManager.gnome.enable = true;
+  # Services configuration
+  services = {
+    # Enable OpenSSH daemon
+    openssh.enable = true;
 
-    # VMware display settings
-    videoDrivers = [ "vmware" ];
-    
-    # Better resolution handling
-    resolutions = [
-      { x = 1920; y = 1080; }
-      { x = 1600; y = 900; }
-      { x = 1366; y = 768; }
-    ];
+    # VMware guest services
+    vmware.guest = {
+      enable = true;
+      headless = false;
+    };
+
+    # Enable X11 and basic desktop environment
+    xserver = {
+      enable = true;
+      displayManager.gdm.enable = true;
+      desktopManager.gnome.enable = true;
+
+      # VMware display settings
+      videoDrivers = [ "vmware" ];
+      
+      # Better resolution handling
+      resolutions = [
+        { x = 1920; y = 1080; }
+        { x = 1600; y = 900; }
+        { x = 1366; y = 768; }
+      ];
+    };
   };
 
   # Enable sound

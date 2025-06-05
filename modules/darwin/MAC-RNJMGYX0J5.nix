@@ -1,4 +1,4 @@
-{ self, pkgs, config, user, ... }:
+{ user, ... }:
 
 {
   # Core nix-darwin configuration for MAC-RNJMGYX0J5

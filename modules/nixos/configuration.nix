@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running 'nixos-help').
 
-{ config, pkgs, lib, ... }:
+{ pkgs, lib, ... }:
 
 {
   imports =
@@ -30,32 +30,39 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
+  # Services configuration
+  services = {
+    # Enable the X11 windowing system and GNOME Desktop Environment
+    xserver = {
+      enable = true;
+      
+      # Enable the GNOME Desktop Environment
+      displayManager.gdm.enable = true;
+      desktopManager.gnome.enable = true;
 
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+      # Configure keymap
+      xkb = {
+        layout = "us";
+        variant = "";
+      };
+    };
 
-  # Configure keymap
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
+    # Enable CUPS to print documents
+    printing.enable = true;
+
+    # Enable sound with pipewire
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+    };
   };
 
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-
-  # Enable sound with pipewire.
+  # Enable sound with pipewire
   sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
 
   # Define a user account
   users.users.drodriguez = {

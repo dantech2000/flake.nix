@@ -1,5 +1,5 @@
 # This file contains shared configuration that applies to both Darwin and NixOS systems
-{ config, pkgs, lib, inputs, user, hostname, ... }:
+{ pkgs, ... }:
 
 {
   # Common system-level packages

@@ -1,0 +1,128 @@
+name: Test nix-darwin Configuration
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-build:
+    strategy:
+      matrix:
+        os: 
+          - macos-14      # Apple Silicon (ARM64)
+        include:
+          - os: macos-14
+            arch: aarch64-darwin
+            hostname: MAC-RNJMGYX0J5-arm64
+    
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Install Nix with Determinate Systems installer
+      uses: DeterminateSystems/nix-installer-action@main
+      with:
+        logger: pretty
+        log-directives: nix_installer=trace
+        backtrace: full
+
+    - name: Enable Nix Magic Cache
+      uses: DeterminateSystems/magic-nix-cache-action@main
+
+    - name: Check Nix installation
+      run: |
+        nix --version
+        nix show-config | grep experimental-features
+
+    - name: Check flake syntax
+      run: |
+        nix flake check --no-build
+
+    - name: Test build configuration (dry-run)
+      run: |
+        # Test that the configuration can be built without actually applying it
+        nix build .#darwinConfigurations.MAC-RNJMGYX0J5.system --dry-run
+
+    - name: Validate Nix formatting
+      run: |
+        # Check if all .nix files are properly formatted
+        if command -v nixpkgs-fmt >/dev/null 2>&1; then
+          echo "Checking Nix file formatting..."
+          find . -name "*.nix" -exec nixpkgs-fmt --check {} \;
+        else
+          echo "Installing nixpkgs-fmt..."
+          nix profile install nixpkgs#nixpkgs-fmt
+          echo "Checking Nix file formatting..."
+          find . -name "*.nix" -exec nixpkgs-fmt --check {} \;
+        fi
+
+    - name: Test home-manager configuration
+      run: |
+        # Test that home-manager configuration builds
+        nix build .#homeConfigurations.drodriguez.activationPackage --dry-run
+
+    - name: Show system info
+      run: |
+        echo "=== System Information ==="
+        uname -a
+        echo "Architecture: $(uname -m)"
+        echo "macOS Version: $(sw_vers -productVersion)"
+        echo "=== Nix Information ==="
+        nix --version
+        echo "=== Available Darwin Configurations ==="
+        nix flake show --json | jq -r '.darwinConfigurations | keys[]'
+
+    - name: Cache validation
+      run: |
+        echo "=== Nix Store Information ==="
+        nix path-info --store daemon --all --json | jq '. | length'
+        echo "=== Disk Usage ==="
+        du -sh /nix/store 2>/dev/null || echo "Could not get store size"
+
+  lint-and-format:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Install Nix
+      uses: DeterminateSystems/nix-installer-action@main
+
+    - name: Check with statix
+      run: |
+        nix profile install nixpkgs#statix
+        statix check .
+
+    - name: Check formatting with nixpkgs-fmt
+      run: |
+        nix profile install nixpkgs#nixpkgs-fmt
+        nixpkgs-fmt --check .
+
+    - name: Check for dead code with deadnix  
+      run: |
+        nix profile install nixpkgs#deadnix
+        deadnix --check .
+
+  security-check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v3
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif' 

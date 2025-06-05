@@ -79,3 +79,68 @@ tasks:
     desc: Build the VM configuration without running it
     cmds:
       - nix build .#nixosConfigurations.nixos-vm.config.system.build.vm
+
+  # Local Testing Commands
+  test-syntax:
+    desc: Test flake syntax (fast local validation)
+    cmds:
+      - nix flake check --no-build
+
+  test-build:
+    desc: Test configuration build (dry-run, no system changes)
+    cmds:
+      - nix build .#darwinConfigurations.{{.FLAKE_NAME}}.system --dry-run
+
+  test-home:
+    desc: Test home-manager configuration build (dry-run)
+    cmds:
+      - nix build .#homeConfigurations.drodriguez.activationPackage --dry-run
+
+  test-format:
+    desc: Check Nix code formatting
+    cmds:
+      - |
+        if command -v nixpkgs-fmt >/dev/null 2>&1; then
+          echo "Checking Nix file formatting..."
+          find . -name "*.nix" -exec nixpkgs-fmt --check {} \;
+        else
+          echo "Installing nixpkgs-fmt..."
+          nix profile add nixpkgs#nixpkgs-fmt
+          echo "Checking Nix file formatting..."
+          find . -name "*.nix" -exec nixpkgs-fmt --check {} \;
+        fi
+
+  test-lint:
+    desc: Lint Nix code with statix
+    cmds:
+      - |
+        if command -v statix >/dev/null 2>&1; then
+          statix check .
+        else
+          echo "Installing statix..."
+          nix profile add nixpkgs#statix
+          statix check .
+        fi
+
+  test-dead-code:
+    desc: Check for dead code with deadnix
+    cmds:
+      - |
+        if command -v deadnix >/dev/null 2>&1; then
+          deadnix --fail .
+        else
+          echo "Installing deadnix..."
+          nix profile add nixpkgs#deadnix
+          deadnix --fail .
+        fi
+
+  test-all:
+    desc: Run all local tests (syntax, formatting, linting, build)
+    cmds:
+      - task: test-syntax
+      - task: test-format
+      - task: test-lint
+      - task: test-dead-code
+      - task: test-build
+      - task: test-home
+      - echo "✅ All local tests passed!"
