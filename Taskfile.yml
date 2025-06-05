@@ -102,12 +102,12 @@ tasks:
       - |
         if command -v nixpkgs-fmt >/dev/null 2>&1; then
           echo "Checking Nix file formatting..."
-          find . -name "*.nix" -exec nixpkgs-fmt --check {} \;
+          nixpkgs-fmt --check .
         else
           echo "Installing nixpkgs-fmt..."
           nix profile add nixpkgs#nixpkgs-fmt
           echo "Checking Nix file formatting..."
-          find . -name "*.nix" -exec nixpkgs-fmt --check {} \;
+          nixpkgs-fmt --check .
         fi
 
   test-lint:
