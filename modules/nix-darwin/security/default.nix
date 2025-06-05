@@ -1,4 +1,4 @@
-{ ... }:
+_ :
 
 {
   # TouchID authentication for sudo
