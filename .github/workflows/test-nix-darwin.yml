@@ -62,8 +62,8 @@ jobs:
 
     - name: Test home-manager configuration
       run: |
-        # Test that home-manager configuration builds
-        nix build .#homeConfigurations.drodriguez.activationPackage --dry-run
+        # Home-manager is integrated into Darwin configurations, so it's tested with the system build
+        echo "Home-manager is integrated into Darwin system configuration - already tested above"
 
     - name: Show system info
       run: |

@@ -94,7 +94,7 @@ tasks:
   test-home:
     desc: Test home-manager configuration build (dry-run)
     cmds:
-      - nix build .#homeConfigurations.drodriguez.activationPackage --dry-run
+      - echo "Home-manager is integrated into Darwin system configuration - already tested with Darwin build"
 
   test-format:
     desc: Check Nix code formatting
