@@ -17,7 +17,7 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nix-darwin, home-manager, nixpkgs, nixos-hardware, flake-utils, ... }@inputs:
+  outputs = { self, nix-darwin, home-manager, nixpkgs, flake-utils, ... }@inputs:
     let
       inherit (flake-utils.lib) eachDefaultSystem;
 
@@ -36,30 +36,6 @@
       };
 
       # Function to create system-specific configurations
-      mkSystemConfig = { system, hostname, user, extraModules ? [ ] }: {
-        inherit system;
-        specialArgs = { inherit inputs user hostname; };
-        modules = [
-          ./modules/shared/default.nix
-          {
-            nixpkgs = nixpkgsConfig;
-            networking.hostName = hostname;
-            users.users.${user} = {
-              home = "/home/${user}";
-              isNormalUser = true;
-            };
-          }
-          home-manager.nixosModules.home-manager
-          (sharedModules // {
-            home-manager.users.${user} = {
-              imports = [
-                ./modules/home
-                ./modules/neovim
-              ];
-            };
-          })
-        ] ++ extraModules;
-      };
 
       # Function to create Darwin-specific configurations
       mkDarwinConfig = { system, hostname, user }: nix-darwin.lib.darwinSystem {
@@ -85,16 +61,6 @@
       };
 
       # Function to create NixOS-specific configurations
-      mkNixosConfig = { system, hostname, user }: nixpkgs.lib.nixosSystem (
-        mkSystemConfig {
-          inherit system hostname user;
-          extraModules = [
-            ./modules/nixos/${hostname}.nix
-            nixos-hardware.nixosModules.common-cpu-amd
-            nixos-hardware.nixosModules.common-pc-ssd
-          ];
-        }
-      );
     in
     (eachDefaultSystem (system: {
       # Development shell and formatting tools
@@ -142,6 +108,6 @@
 
       # Add packages output for compatibility
       packages.x86_64-darwin.default = self.darwinConfigurations."drodriguezs-MacBook-Pro".system;
-      packages.arm64-darwin.defualt = self.darwinConfigurations."MAC-RNJMGYX0J5".system;
+      packages.arm64-darwin.default = self.darwinConfigurations."MAC-RNJMGYX0J5".system;
     };
 }
