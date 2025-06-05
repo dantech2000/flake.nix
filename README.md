@@ -1,202 +1,307 @@
 # Nix Darwin Configuration
 
-This repository contains my personal Nix configuration for macOS, using nix-darwin and Home Manager. It provides a declarative way to manage both system-level and user-level configurations.
+This repository contains my personal Nix configuration for macOS, using nix-darwin and Home Manager. It provides a declarative way to manage both system-level and user-level configurations with a **modular, maintainable structure**.
 
-## Features
+## 🏗️ Architecture
 
-- **System Configuration**
-  - Dark mode enabled by default
-  - Touch ID authentication for sudo
-  - Optimized keyboard repeat settings
-  - Custom dock and finder preferences
-  - System-wide Nerd Fonts installation
+This configuration is built with a **modular design** that separates concerns and makes maintenance easy:
 
-- **Development Environment**
-  - Neovim configuration with extensive plugin support
-  - Development tools for multiple languages (Go, Python, Terraform, etc.)
-  - Git and GitHub CLI integration
-  - Docker and Kubernetes tools (k9s, kubectl, helm)
-  - AWS tools (aws-cli, session-manager-plugin)
+### Home Manager Modules (User Environment)
+- **`neovim.nix`** - Complete Neovim configuration with plugins and LSP
+- **`zsh.nix`** - Shell configuration with oh-my-zsh, powerlevel10k, and plugins  
+- **`development.nix`** - Development tools, languages, git, and DevOps tools
+- **`cli-tools.nix`** - Command-line utilities and system tools
 
-- **Shell Environment**
-  - Zsh as default shell with various enhancements:
-    - **Starship Prompt**: A minimal, blazing-fast, and infinitely customizable prompt
-    - **Oh My Zsh Integration**:
-      - Theme: awesomepanda
-      - Plugins: git, kubectl, brew, macos, colored-man-pages, virtualenv, terraform, tmux, docker, ssh-agent
-    - **Shell Features**:
-      - Vi mode with custom key bindings
-      - History settings with incremental search
-      - Advanced completion system with Carapace integration
-      - Syntax highlighting and autosuggestions
-      - Custom aliases for common commands
+### Nix-Darwin Modules (System Configuration)
+- **`fonts.nix`** - System-wide Nerd Fonts installation
+- **`security.nix`** - TouchID authentication and security settings
+- **`users.nix`** - User account management
+- **`system.nix`** - macOS system defaults (dock, finder, global settings)
+- **`programs.nix`** - System packages, ZSH, and application setup
+- **`homebrew.nix`** - Comprehensive package management via Homebrew
 
-- **Environment Variables**
-  - **XDG Base Directories**:
-    - `XDG_CONFIG_HOME`: Set to `~/.config`
-    - `ZDOTDIR`: Set to `~/.config/zsh`
-    - `ZSH_COMPDUMP`: Set to `~/.cache/zsh/.zcompdump`
+## ✨ Features
 
-  - **Development Tools**:
-    - `EDITOR`: Set to neovim
-    - `GOPATH`: Set to `~/go`
-    - `PYTHONDONTWRITEBYTECODE`: Prevents Python from creating .pyc files
+### 🎯 System Configuration (Nix-Darwin)
+- **macOS Defaults**: Dark mode, optimized keyboard repeat, custom dock/finder preferences
+- **Security**: TouchID authentication for sudo
+- **Fonts**: System-wide Nerd Fonts (JetBrains Mono, Fira Code, Monaspace, etc.)
+- **Package Management**: 44+ applications via Homebrew (Arc, VSCode, Docker, etc.)
+- **Core Tools**: System packages for development and productivity
 
-  - **System Preferences**:
-    - `LC_ALL`: Set to "en_US.UTF-8"
-    - `LESS`: Set to "-R" for proper color support
-    - `SSH_CONFIG_DIR`: Set to `~/.config/ssh`
-    - `GPG_TTY`: Set dynamically for GPG signing
-    - `umask`: Set to 022 for secure file permissions
+### 🛠️ Development Environment (Home Manager)
+- **Editor**: Neovim with extensive plugin support and LSP configuration
+- **Languages**: Go, Python, Rust, Node.js, with proper toolchains
+- **DevOps**: Docker, Kubernetes (k9s, kubectl, helm), Terraform, Ansible
+- **Cloud**: AWS CLI, session-manager-plugin, aws-vault
+- **Version Control**: Git with comprehensive configuration and GitHub CLI
 
-  - **Search and Completion**:
-    - `FZF_DEFAULT_COMMAND`: Uses ripgrep for better file searching
-    - `FZF_DEFAULT_OPTS`: Customized for better display
-    - `CARAPACE_BRIDGES`: Configured for cross-shell completion
+### 🐚 Shell Environment (ZSH)
+- **Prompt**: Starship prompt with custom configuration
+- **Framework**: Oh My Zsh with curated plugins
+- **Features**: 
+  - Syntax highlighting and autosuggestions
+  - FZF integration for fuzzy finding
+  - Carapace for advanced completions
+  - Custom aliases and functions
+  - Powerlevel10k theme support
 
-- **Path Configuration**
-  The configuration manages PATH additions for various tools:
-  ```bash
-  /usr/local/bin
-  /usr/local/sbin
-  /opt/homebrew/bin
-  /opt/homebrew/sbin
-  $HOME/.yarn/bin
-  $HOME/.config/yarn/global/node_modules/.bin
-  /usr/local/opt/llvm/bin/clangd
-  /Library/Frameworks/Python.framework/Versions/3.7/bin
-  $GOROOT/bin
-  $GOPATH/bin
-  ```
+### 🔧 CLI Tools
+- **Modern Replacements**: bat (cat), eza (ls), ripgrep (grep), zoxide (cd)
+- **Productivity**: htop, neofetch, tldr, tmux
+- **File Processing**: jq, yq, ffmpeg, imagemagick
+- **Network**: curl, wget, dnsmasq
 
-- **Terminal Environment**
-  - Modern CLI tools (bat, eza, ripgrep, fzf)
+## 📁 Directory Structure
 
-- **Applications**
-  - Managed via Homebrew Casks:
-    - Browsers: Arc, Firefox, Chrome
-    - Development: VSCode, Zed, iTerm2, Wezterm, Docker
-    - Productivity: 1Password, Notion, Obsidian
-    - Communication: Slack, Discord, Zoom
-    - Media: Spotify, VLC, IINA
+```
+├── flake.nix                          # Main configuration entry point
+├── flake.lock                         # Lock file for dependencies  
+├── modules/
+│   ├── darwin/                        # Machine-specific core settings
+│   │   └── MAC-RNJMGYX0J5.nix        # Core nix-darwin configuration
+│   ├── home-manager/                  # 🏠 User Environment (Modular)
+│   │   ├── default.nix               # Home Manager entry point
+│   │   ├── config/                   # Configuration files
+│   │   │   ├── p10k/                 # Powerlevel10k theme
+│   │   │   └── starship/             # Starship prompt config
+│   │   └── programs/                 # User program modules
+│   │       ├── neovim.nix           # 📝 Editor configuration
+│   │       ├── zsh.nix              # 🐚 Shell configuration  
+│   │       ├── development.nix      # 💻 Dev tools & languages
+│   │       └── cli-tools.nix        # 🔧 CLI utilities
+│   ├── nix-darwin/                   # 🖥️ System Configuration (Modular)
+│   │   ├── default.nix              # Nix-Darwin entry point
+│   │   ├── fonts/                   # 🔤 Font management
+│   │   ├── security/                # 🔒 Security settings
+│   │   ├── users/                   # 👤 User accounts
+│   │   ├── system/                  # ⚙️ macOS defaults
+│   │   ├── programs/                # 📦 System packages
+│   │   └── homebrew/                # 🍺 Package management
+│   ├── nixos/                       # Linux configurations
+│   └── shared/                      # Shared components
+├── README.md                        # This file
+└── Taskfile.yml                     # Common tasks automation
+```
 
-## Prerequisites
+## 🚀 Quick Start
 
-- macOS
-- Command Line Tools for Xcode: `xcode-select --install`
+### Prerequisites
+- macOS (tested on Sequoia)
+- Command Line Tools: `xcode-select --install`
 
-## Installation on macOS Sequoia
-
-### 1. Install Nix (Recommended: Determinate Systems Installer)
-
-On macOS Sequoia, use the Determinate Systems installer for best compatibility:
-
+### 1. Install Nix (Determinate Systems)
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh
 ```
-- This installer sets up the multi-user daemon, enables flakes, and works seamlessly with macOS Sequoia.
-- After installation, restart your terminal.
 
 ### 2. Install nix-darwin
-
 ```bash
 nix run github:LnL7/nix-darwin --extra-experimental-features 'nix-command flakes'
 ```
-- Follow the prompts to complete installation.
-- You may need to add `/nix/var/nix/profiles/default/bin` to your `PATH` temporarily.
 
-### 3. Clone This Configuration
-
+### 3. Clone & Apply Configuration
 ```bash
 git clone https://github.com/dantech2000/flake.nix.git ~/.config/nix-darwin
 cd ~/.config/nix-darwin
+
+# For existing machines (MAC-RNJMGYX0J5)
+darwin-rebuild switch --flake .#MAC-RNJMGYX0J5
+
+# For new machines - see "New Machine Setup" below
 ```
 
-### 4. Configure for Your Mac (New Host)
+## 🆕 New Machine Setup
 
-If you are setting up a new Mac:
-1. Copy the host configuration file:
+### 1. Create Machine Configuration
+```bash
+# Copy the core settings template  
+cp modules/darwin/MAC-RNJMGYX0J5.nix modules/darwin/<your-hostname>.nix
+
+# Edit the file for your machine
+vim modules/darwin/<your-hostname>.nix
+```
+
+### 2. Update Flake Configuration
+Edit `flake.nix` and add your machine:
+```nix
+darwinConfigurations = {
+  "MAC-RNJMGYX0J5" = mkDarwinConfig { ... };
+  "<your-hostname>" = mkDarwinConfig {
+    system = "aarch64-darwin";  # or "x86_64-darwin" for Intel
+    hostname = "<your-hostname>";
+    user = "<your-username>";
+  };
+};
+```
+
+### 3. Apply Configuration
+```bash
+darwin-rebuild switch --flake .#<your-hostname>
+```
+
+## 🎨 Customization
+
+### 🖥️ System Configuration (Nix-Darwin)
+- **Fonts**: Edit `modules/nix-darwin/fonts/default.nix`
+- **macOS Settings**: Edit `modules/nix-darwin/system/default.nix`
+- **Homebrew Packages**: Edit `modules/nix-darwin/homebrew/default.nix`
+- **System Packages**: Edit `modules/nix-darwin/programs/default.nix`
+
+### 🏠 User Configuration (Home Manager)  
+- **Shell**: Edit `modules/home-manager/programs/zsh.nix`
+- **Editor**: Edit `modules/home-manager/programs/neovim.nix`
+- **Dev Tools**: Edit `modules/home-manager/programs/development.nix`
+- **CLI Tools**: Edit `modules/home-manager/programs/cli-tools.nix`
+
+### 🔧 Adding New Modules
+The modular structure makes it easy to add new functionality:
+
+1. **System Module**: Create `modules/nix-darwin/<name>/default.nix`
+2. **User Module**: Create `modules/home-manager/programs/<name>.nix`
+3. **Import**: Add to respective `imports` list in `default.nix`
+
+## 📋 Common Tasks
+
+This project includes a Taskfile for common operations:
+
+```bash
+task                    # List all available tasks
+task switch            # Rebuild and switch configuration
+task update            # Update flake inputs
+task check             # Check configuration for errors
+task rollback          # Rollback to previous generation
+task clean             # Clean up old profiles
+task gc                # Garbage collect old generations
+```
+
+## 🐚 Environment Details
+
+### Environment Variables
+- **XDG Directories**: `XDG_CONFIG_HOME`, `ZDOTDIR`, `ZSH_COMPDUMP`
+- **Development**: `EDITOR=nvim`, `GOPATH`, `PYTHONDONTWRITEBYTECODE`
+- **System**: `LC_ALL`, `LESS`, `SSH_CONFIG_DIR`, `GPG_TTY`
+- **Search**: `FZF_*` variables, `CARAPACE_BRIDGES`
+
+### Path Configuration
+```bash
+/usr/local/bin:/usr/local/sbin
+/opt/homebrew/bin:/opt/homebrew/sbin
+$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin
+/usr/local/opt/llvm/bin
+$GOROOT/bin:$GOPATH/bin
+```
+
+### Shell Features
+- **Theme**: Oh My Zsh with awesomepanda theme or Powerlevel10k
+- **Plugins**: git, kubectl, brew, macos, colored-man-pages, terraform, docker
+- **Enhancements**: vi mode, history search, syntax highlighting, autosuggestions
+
+## 🔧 Maintenance
+
+### Updating
+```bash
+git pull origin main                    # Pull latest changes
+task update                            # Update flake inputs  
+task switch                            # Apply changes
+```
+
+### Cleaning Up
+```bash
+task clean                             # Clean old profiles
+task gc                               # Garbage collect
+sudo nix-collect-garbage -d           # System-wide cleanup
+```
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+1. **Dirty Git Tree Warning**
    ```bash
-   cp modules/darwin/drodriguezs-MacBook-Pro.nix modules/darwin/<your-new-hostname>.nix
-   ```
-2. Edit the new file and set `networking.hostName = "<your-new-hostname>";` to match your Mac's hostname.
-3. Edit `flake.nix` and add a new entry under `darwinConfigurations`:
-   ```nix
-   darwinConfigurations = {
-     "drodriguezs-MacBook-Pro" = mkDarwinConfig { ... };
-     "<your-new-hostname>" = mkDarwinConfig {
-       system = "arm64-darwin"; # or "x86_64-darwin" for Intel
-       hostname = "<your-new-hostname>";
-       user = "<your-username>";
-     };
-   };
+   git add . && git commit -m "Local changes"
    ```
 
-### 5. Build and Activate the Configuration
+2. **Configuration Conflicts**
+   ```bash
+   darwin-rebuild switch --flake .#<hostname> --show-trace
+   ```
 
+3. **Homebrew Issues**
+   ```bash
+   brew doctor && brew update
+   ```
+
+4. **Module Not Found**
+   - Check imports in `default.nix` files
+   - Verify module file paths and names
+   - Ensure new files are added to git
+
+## 🎯 Benefits of Modular Structure
+
+- **🔧 Easy Maintenance**: Each component in its own file
+- **🎯 Clear Organization**: Logical separation by functionality  
+- **🚀 Faster Development**: Modify only what you need
+- **📚 Better Documentation**: Self-documenting structure
+- **🔄 Reusability**: Modules can be easily shared or adapted
+- **🧪 Testing**: Test individual components independently
+
+## 🛠️ Development Environment
+
+To work on this configuration:
 ```bash
-nix build .#darwinConfigurations.<your-new-hostname>.system
-./result/sw/bin/darwin-rebuild switch --flake .#<your-new-hostname>
-```
-For subsequent updates:
-```bash
-darwin-rebuild switch --flake .#<your-new-hostname>
+nix develop                           # Enter development shell
+task check                           # Validate configuration
+task switch                          # Test changes
 ```
 
-**Note:**
-- Make sure your hostname matches the one in your configuration. You can check it with `scutil --get HostName` or change it via `sudo scutil --set HostName <your-new-hostname>`.
-- The Determinate Systems installer enables flakes by default; no extra flake setup is needed.
-- For Apple Silicon (M1/M2/M3), use `system = "arm64-darwin"` in your flake.
+The development shell provides:
+- `nixpkgs-fmt` for code formatting
+- `nil` language server for Nix
+- `statix` for linting
+- All development tools
 
-## Directory Structure
+## 📊 System Overview
 
+- **Total Packages**: 100+ via Nix + 44+ via Homebrew
+- **Modular Components**: 10 specialized modules  
+- **Configuration Files**: Organized and templated
+- **Maintenance Burden**: Minimal thanks to modular design
+- **Platform Support**: macOS (primary), NixOS (vm/testing)
+
+## 🧪 VMware Fusion Testing
+
+### Prerequisites
+- VMware Fusion Pro (recommended) or VMware Fusion Player
+- At least 100GB of free disk space
+- NixOS ISO image (preferably the latest stable release)
+
+### Quick VM Setup
+1. **Download NixOS ISO**: Get from https://nixos.org/download.html
+2. **Create VM**: Use "Linux" > "Other Linux 5.x kernel 64-bit"
+3. **Configure**: 4GB RAM, 2+ CPU cores, 60GB disk, 3D acceleration enabled
+4. **Install**: Standard NixOS installation process
+5. **Apply Config**: Clone this repo and use the `nixos-vm` configuration
+
+### Optimized VM Settings
 ```
-.
-├── flake.nix              # Main configuration entry point
-├── flake.lock            # Lock file for dependencies
-├── modules/
-│   ├── darwin/           # macOS-specific configurations
-│   ├── home/            # User-specific configurations
-│   ├── neovim/         # Neovim configuration
-│   └── nixos/          # NixOS configurations
-```
-
-## Customization
-
-### System Configuration
-Edit `modules/darwin/<hostname>.nix` to modify:
-- System packages
-- macOS settings
-- Homebrew packages and casks
-- System-wide configurations
-
-Note: Replace `<hostname>` with your machine's hostname (e.g., `drodriguezs-MacBook-Pro.nix`)
-
-### Development Environment
-The configuration includes a development shell that provides:
-- `nixpkgs-fmt` for Nix code formatting
-- `nil` for Nix language server support
-- Git for version control
-- Zsh as the default shell
-
-To enter the development environment:
-```bash
-nix develop
+Hardware:
+- Memory: 4GB+ (8GB recommended)  
+- CPUs: 2+ cores (4 recommended)
+- Graphics: 2GB, 3D acceleration enabled
+- Network: NAT with IPv4/IPv6 enabled
+- USB: 3.1 compatibility
+- Shared folders enabled for development
 ```
 
-### User Configuration
-Edit `modules/home/home.nix` to modify:
-- User packages
-- Shell configurations
-- Development tools
-- Personal preferences
+The configuration includes VMware-specific optimizations:
+- VMware guest tools integration
+- Proper display drivers and resolution detection
+- Network interface configuration  
+- Shared folder support
+- Hardware acceleration support
 
-### Neovim Configuration
-Edit files in `modules/neovim/` to modify:
-- Plugin list
-- Editor settings
-- Language server configurations
-- Key mappings
+This allows testing the NixOS modules in a virtualized environment while developing the macOS configuration.
 
 ## Common Tasks
 
@@ -222,320 +327,22 @@ For system maintenance:
 - `task history` - Show the history of configurations
 - `task show-config` - Show the current system configuration
 
-## VMware Fusion Setup Guide
+## 📚 Additional Resources
 
-### Prerequisites
-- VMware Fusion Pro (recommended) or VMware Fusion Player
-- At least 100GB of free disk space
-- NixOS ISO image (preferably the latest stable release)
+- **Nix Manual**: https://nixos.org/manual/nix/stable/
+- **Nix-Darwin Documentation**: https://github.com/LnL7/nix-darwin
+- **Home Manager Manual**: https://nix-community.github.io/home-manager/
+- **NixOS Search**: https://search.nixos.org/packages
+- **Community Wiki**: https://nixos.wiki/
 
-### VM Configuration Best Practices
+## 🤝 Contributing
 
-#### Hardware Settings
-1. **Processors & Memory**:
-   - CPUs: At least 2 cores (4 recommended)
-   - Memory: Minimum 4GB (8GB recommended)
-   - Enable "Hypervisor" options for better performance
-   ```
-   Settings > System Settings > Processors & Memory:
-   - [x] Enable hypervisor applications
-   - [x] Enable code profiling applications
-   ```
+Contributions are welcome! Please feel free to:
+- Report bugs and issues
+- Suggest new features or improvements  
+- Submit pull requests for enhancements
+- Share your own modular configurations
 
-2. **Display**:
-   ```
-   Settings > Display:
-   - [x] Accelerate 3D Graphics
-   - [x] Use full resolution for Retina display
-   - Graphics Memory: 2GB
-   ```
-
-3. **Hard Disk**:
-   - Size: 60GB minimum (100GB recommended)
-   - Bus type: NVMe (for better performance)
-   - Split into multiple files: Yes
-   ```
-   Settings > Hard Disk:
-   - [x] Pre-allocate disk space
-   - [x] Enable defragmentation
-   ```
-
-4. **Network Adapter**:
-   ```
-   Settings > Network Adapter:
-   - Connect at power on: Yes
-   - Network Type: NAT
-   - [x] Enable IPv4
-   - [x] Enable IPv6
-   ```
-
-5. **USB & Bluetooth**:
-   ```
-   Settings > USB & Bluetooth:
-   - USB Compatibility: USB 3.1
-   - [x] Share Bluetooth devices with Linux
-   ```
-
-6. **Sharing**:
-   ```
-   Settings > Sharing:
-   - [x] Enable Shared Folders
-   - [x] Enable Drag and Drop
-   - [x] Enable Copy and Paste
-   ```
-
-### Performance Optimization
-
-1. **VMware Tools Settings**:
-   ```nix
-   # Already included in vm.nix
-   virtualisation.vmware.guest.enable = true;
-   services.vmware.guest = {
-     enable = true;
-     headless = false;
-   };
-   ```
-
-2. **Disk Performance**:
-   ```
-   Settings > Advanced:
-   - [x] Enable disk performance optimization
-   - Hard disk buffering: Enabled
-   ```
-
-3. **Memory Management**:
-   ```
-   Settings > Advanced:
-   - [x] Enable page sharing
-   - [x] Enable memory trimming
-   ```
-
-### Recommended VM Creation Steps
-
-1. Create New Virtual Machine:
-   ```
-   File > New > Create a custom virtual machine
-   ```
-
-2. Choose Operating System:
-   ```
-   Linux > Other Linux 5.x kernel 64-bit
-   ```
-
-3. Configure VM:
-   ```
-   - Name: NixOS-Development
-   - Save As: ~/Virtual Machines/
-   - Firmware Type: UEFI
-   ```
-
-4. Customize Settings:
-   ```
-   Settings > General:
-   - [x] Pass Power Status to VM
-   - [x] Support for Mac OS Keyboard
-   ```
-
-5. Additional Software:
-   ```
-   # Already included in vm.nix
-   environment.systemPackages = with pkgs; [
-     open-vm-tools
-     xorg.xrandr
-     spice-vdagent
-     # Development tools
-     git
-     vim
-     curl
-     wget
-   ];
-   ```
-
-### Troubleshooting Tips
-
-1. **Display Issues**:
-   - If resolution is wrong: `sudo vmware-resolutionSet 1920 1080`
-   - If screen is laggy: Enable 3D acceleration and increase graphics memory
-
-2. **Network Issues**:
-   - If NAT doesn't work: Try bridged networking
-   - If DNS is slow: Add `networking.nameservers = [ "8.8.8.8" "1.1.1.1" ];`
-
-3. **Performance Issues**:
-   - If VM is slow: Increase CPU/RAM allocation
-   - If disk I/O is slow: Enable NVMe and pre-allocate disk space
-
-4. **Shared Folders**:
-   - Mount point: `/mnt/hgfs/`
-   - Auto-mount: Add to `/etc/fstab`
-   - Permissions: Use `vmhgfs-fuse`
-
-### Post-Installation Optimization
-
-1. **Check VMware Tools**:
-   ```bash
-   systemctl status vmware-tools
-   ```
-
-2. **Verify 3D Acceleration**:
-   ```bash
-   glxinfo | grep "direct rendering"
-   ```
-
-3. **Test Shared Folders**:
-   ```bash
-   # Mount shared folders
-   sudo vmhgfs-fuse .host:/ /mnt/hgfs/ -o allow_other
-   ```
-
-4. **Monitor Performance**:
-   ```bash
-   # Install monitoring tools
-   nix-env -iA nixos.htop nixos.iotop
-   ```
-
-## Testing in VMware Fusion
-
-To test this configuration in VMware Fusion:
-
-1. Download the latest NixOS ISO from https://nixos.org/download.html
-
-2. Create a new VM in VMware Fusion:
-   - Click "New" or File > New
-   - Choose "Install from disc or image"
-   - Select the downloaded NixOS ISO
-   - Choose "Linux" > "Other Linux 5.x kernel 64-bit"
-   - Configure VM settings:
-     - At least 4GB RAM
-     - At least 2 CPU cores
-     - 60GB disk space
-     - Enable 3D acceleration
-     - Network adapter: NAT
-
-3. Install NixOS:
-   ```bash
-   # Format the disk (assuming /dev/sda)
-   sudo parted /dev/sda -- mklabel gpt
-   sudo parted /dev/sda -- mkpart primary 512MB -8GB
-   sudo parted /dev/sda -- mkpart primary linux-swap -8GB 100%
-   sudo parted /dev/sda -- mkpart ESP fat32 1MB 512MB
-   sudo parted /dev/sda -- set 3 esp on
-
-   # Format partitions
-   sudo mkfs.ext4 -L nixos /dev/sda1
-   sudo mkswap -L swap /dev/sda2
-   sudo mkfs.fat -F 32 -n boot /dev/sda3
-
-   # Mount partitions
-   sudo mount /dev/disk/by-label/nixos /mnt
-   sudo mkdir -p /mnt/boot
-   sudo mount /dev/disk/by-label/boot /mnt/boot
-   sudo swapon /dev/sda2
-   ```
-
-4. Clone and activate the configuration:
-   ```bash
-   # Install git
-   nix-env -iA nixos.git
-
-   # Clone your configuration
-   git clone https://github.com/yourusername/nix-config.git /mnt/etc/nixos
-   
-   # Generate hardware configuration
-   sudo nixos-generate-config --root /mnt
-
-   # Copy the generated hardware-configuration.nix
-   cp /mnt/etc/nixos/hardware-configuration.nix /mnt/etc/nixos/modules/nixos/
-
-   # Install NixOS with your configuration
-   sudo nixos-install --flake .#nixos-vm
-   ```
-
-5. After installation:
-   - Remove the ISO from the VM
-   - Reboot
-   - Log in with username: `drodriguez` and password: `changeme`
-   - Change your password immediately using `passwd`
-
-Note: The configuration includes VMware-specific settings:
-- VMware guest tools
-- Proper display drivers
-- Network interface configuration
-- Shared folder support
-- Hardware acceleration support
-
-## Maintenance
-
-### Updating the System
-```bash
-# Pull latest changes
-git pull origin main
-
-# Update and switch to new configuration
-darwin-rebuild switch --flake .#<your-new-hostname>
-```
-
-### Cleaning Up
-```bash
-# Remove old generations
-sudo nix-collect-garbage -d
-
-# Remove specific generation
-nix-env --delete-generations [generation-number]
-```
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Dirty Git Tree Warning**
-   ```bash
-   # Check status
-   git status
-   
-   # Commit or stash changes
-   git add .
-   git commit -m "Update configuration"
-   ```
-
-2. **Homebrew Issues**
-   ```bash
-   # Repair Homebrew
-   brew doctor
-   
-   # Update Homebrew
-   brew update
-   ```
-
-3. **Configuration Not Taking Effect**
-   - Ensure you're using the correct hostname in the flake configuration
-   - Try rebuilding with `--show-trace` for more detailed error messages
-   ```bash
-   darwin-rebuild switch --flake .#drodriguezs-MacBook-Pro --show-trace
-   ```
-
-4. **Nix Store Issues**
-   ```bash
-   # Clear derivation links
-   sudo rm /nix/var/nix/gcroots/auto/*
-   
-   # Optimize nix store
-   nix store optimise
-   ```
-
-5. **Flake Lock Issues**
-   ```bash
-   # Update flake inputs
-   nix flake update
-   
-   # Update specific input
-   nix flake lock --update-input nixpkgs
-   ```
-
-## Contributing
-
-Feel free to submit issues and enhancement requests!
-
-## License
+## 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.

@@ -66,7 +66,7 @@
         inherit system;
         specialArgs = { inherit inputs user hostname; };
         modules = [
-          ./modules/darwin/${hostname}.nix
+          ./modules/nix-darwin
           { nixpkgs = nixpkgsConfig; }
           home-manager.darwinModules.home-manager
           (sharedModules // {
