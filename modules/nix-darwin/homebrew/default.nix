@@ -72,7 +72,6 @@ _:
       "raycast"
       "session-manager-plugin"
       "slack"
-      "spotify"
       "telegram"
       "todoist"
       "vagrant"

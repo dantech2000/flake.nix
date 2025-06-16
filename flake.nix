@@ -15,9 +15,13 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
+
+    # Spicetify dependencies
+    spicetify-nix.url = "github:Gerg-L/spicetify-nix";
+    spicetify-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nix-darwin, home-manager, nixpkgs, flake-utils, ... }@inputs:
+  outputs = { self, nix-darwin, home-manager, nixpkgs, flake-utils, spicetify-nix, ... }@inputs:
     let
       inherit (flake-utils.lib) eachDefaultSystem;
 

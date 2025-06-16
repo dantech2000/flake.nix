@@ -10,5 +10,6 @@
     ./system # System: macOS defaults and settings
     ./programs # Programs: System packages, ZSH, applications
     ./homebrew # Homebrew: Package management via Homebrew
+    ./spicetify # Spicetify: Spotify customization
   ];
 }
