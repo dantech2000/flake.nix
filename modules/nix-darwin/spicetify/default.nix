@@ -30,17 +30,19 @@ in
         listPlaylistsWithSong
         loopyLoop
         phraseToPlaylist
-        playNext
         playlistIcons
+        playNext
         popupLyrics
         shuffle # shuffle+
         volumePercentage
      ];
      enabledCustomApps = with spicePkgs.apps; [
-        newReleases
+        betterLibrary
+        localFiles
         lyricsPlus
-        ncsVisualizer
         marketplace
+        ncsVisualizer
+        newReleases
       ];
    };
 }
