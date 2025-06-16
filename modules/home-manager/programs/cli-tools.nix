@@ -33,6 +33,7 @@
     unzip # Archive extraction
     zlib # Compression library
     yt-dlp # Video downloader
+    nil # Nix Language Server
 
     # Documentation and help
     tldr # Simplified man pages
