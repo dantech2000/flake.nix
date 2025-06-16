@@ -12,8 +12,12 @@ jobs:
       matrix:
         os: 
           - macos-14      # Apple Silicon (ARM64)
+          - macos-15      # Apple Silicon (ARM64)
         include:
           - os: macos-14
+            arch: aarch64-darwin
+            hostname: MAC-RNJMGYX0J5-arm64
+          - os: macos-15
             arch: aarch64-darwin
             hostname: MAC-RNJMGYX0J5-arm64
     
