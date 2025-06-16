@@ -8,7 +8,6 @@
     pkgs.starship
     pkgs.mkalias
     pkgs.nixpkgs-fmt
-    pkgs.nodejs
     pkgs.gitAndTools.gitFull
   ];
 
