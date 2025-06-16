@@ -21,7 +21,7 @@
     spicetify-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nix-darwin, home-manager, nixpkgs, flake-utils, spicetify-nix, ... }@inputs:
+  outputs = { self, nix-darwin, home-manager, nixpkgs, flake-utils, ... }@inputs:
     let
       inherit (flake-utils.lib) eachDefaultSystem;
 
