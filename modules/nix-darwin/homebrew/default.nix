@@ -34,11 +34,15 @@ _:
 
     # Homebrew Formulae
     brews = [
+      "docker"
       "libpq"
       "snappy"
       "shopify/shopify/shopify-cli"
       "tfenv"
       "refresh"
+      "libffi"
+      "libyaml"
+      "readline"
     ];
 
     # Homebrew Casks
@@ -46,13 +50,13 @@ _:
       "1password-cli"
       "1password"
       "arc"
-      "aws-vault"
+      "aws-vault-binary"
       "contour"
       "cursor"
       "brave-browser"
       "devtoys"
       "displaylink"
-      "docker"
+      "docker-desktop"
       "dropbox"
       "element"
       "firefox"
@@ -66,14 +70,13 @@ _:
       "insomnia"
       "legcord"
       "notion"
-      "ngrok"
       "obsidian"
       "rectangle"
       "raycast"
       "session-manager-plugin"
       "slack"
       "telegram"
-      "todoist"
+      "todoist-app"
       "vagrant"
       "visual-studio-code"
       "vlc"

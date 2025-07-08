@@ -14,7 +14,6 @@
     # Development tools
     gnumake
     gcc
-    python3
   ];
 
   # Common system settings
