@@ -43,6 +43,7 @@ _:
       "libffi"
       "libyaml"
       "readline"
+      "golangci-lint"
     ];
 
     # Homebrew Casks
