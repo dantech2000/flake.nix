@@ -75,7 +75,6 @@
       fi
       
       # Add additional paths
-      export PATH="/usr/local/bin:/usr/local/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
       export PATH="/usr/local/opt/llvm/bin/clangd:/Library/Frameworks/Python.framework/Versions/3.7/bin:$PATH"
       export PATH="$GOROOT/bin:$PATH"
       export PATH="$PATH:$GOPATH/bin"

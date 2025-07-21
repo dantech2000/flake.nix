@@ -30,32 +30,39 @@ _:
         clone_target = "https://github.com/dantech2000/homebrew-tap";
         force_auto_update = true;
       }
+      {
+        name = "sst/tap";
+        clone_target = "https://github.com/sst/homebrew-tap";
+        force_auto_update = true;
+      }
     ];
 
     # Homebrew Formulae
     brews = [
       "docker"
-      "libpq"
-      "snappy"
-      "shopify/shopify/shopify-cli"
-      "tfenv"
-      "refresh"
-      "libffi"
-      "libyaml"
-      "readline"
       "golangci-lint"
+      "libffi"
+      "libpq"
+      "libyaml"
+      "opencode"
+      "readline"
+      "refresh"
+      "shopify/shopify/shopify-cli"
+      "snappy"
+      "tfenv"
     ];
 
     # Homebrew Casks
     casks = [
-      "1password-cli"
       "1password"
+      "1password-cli"
       "arc"
       "aws-vault-binary"
+      "brave-browser"
       "contour"
       "cursor"
-      "brave-browser"
       "devtoys"
+      "discord"
       "displaylink"
       "docker-desktop"
       "dropbox"
@@ -69,11 +76,10 @@ _:
       "hammerspoon"
       "iina"
       "insomnia"
-      "legcord"
       "notion"
       "obsidian"
-      "rectangle"
       "raycast"
+      "rectangle"
       "session-manager-plugin"
       "slack"
       "telegram"

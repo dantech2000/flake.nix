@@ -2,7 +2,7 @@
 
 This repository contains my personal Nix configuration for macOS, using nix-darwin and Home Manager. It provides a declarative way to manage both system-level and user-level configurations with a **modular, maintainable structure**.
 
-## 🏗️ Architecture
+## Architecture
 
 This configuration is built with a **modular design** that separates concerns and makes maintenance easy:
 
@@ -19,24 +19,26 @@ This configuration is built with a **modular design** that separates concerns an
 - **`system.nix`** - macOS system defaults (dock, finder, global settings)
 - **`programs.nix`** - System packages, ZSH, and application setup
 - **`homebrew.nix`** - Comprehensive package management via Homebrew
+- **`spicetify.nix`** - Spotify customization with themes and extensions
 
-## ✨ Features
+## Features
 
-### 🎯 System Configuration (Nix-Darwin)
+### System Configuration (Nix-Darwin)
 - **macOS Defaults**: Dark mode, optimized keyboard repeat, custom dock/finder preferences
 - **Security**: TouchID authentication for sudo
 - **Fonts**: System-wide Nerd Fonts (JetBrains Mono, Fira Code, Monaspace, etc.)
 - **Package Management**: 44+ applications via Homebrew (Arc, VSCode, Docker, etc.)
 - **Core Tools**: System packages for development and productivity
+- **Music**: Spotify customization via Spicetify with TokyoNight theme and 17+ extensions
 
-### 🛠️ Development Environment (Home Manager)
+### Development Environment (Home Manager)
 - **Editor**: Neovim with extensive plugin support and LSP configuration
 - **Languages**: Go, Python, Rust, Node.js, with proper toolchains
 - **DevOps**: Docker, Kubernetes (k9s, kubectl, helm), Terraform, Ansible
 - **Cloud**: AWS CLI, session-manager-plugin, aws-vault
 - **Version Control**: Git with comprehensive configuration and GitHub CLI
 
-### 🐚 Shell Environment (ZSH)
+### Shell Environment (ZSH)
 - **Prompt**: Starship prompt with custom configuration
 - **Framework**: Oh My Zsh with curated plugins
 - **Features**: 
@@ -46,13 +48,13 @@ This configuration is built with a **modular design** that separates concerns an
   - Custom aliases and functions
   - Powerlevel10k theme support
 
-### 🔧 CLI Tools
+### CLI Tools
 - **Modern Replacements**: bat (cat), eza (ls), ripgrep (grep), zoxide (cd)
 - **Productivity**: htop, neofetch, tldr, tmux
 - **File Processing**: jq, yq, ffmpeg, imagemagick
 - **Network**: curl, wget, dnsmasq
 
-## 📁 Directory Structure
+## Directory Structure
 
 ```
 ├── flake.nix                          # Main configuration entry point
@@ -60,31 +62,32 @@ This configuration is built with a **modular design** that separates concerns an
 ├── modules/
 │   ├── darwin/                        # Machine-specific core settings
 │   │   └── MAC-RNJMGYX0J5.nix        # Core nix-darwin configuration
-│   ├── home-manager/                  # 🏠 User Environment (Modular)
+│   ├── home-manager/                  # User Environment (Modular)
 │   │   ├── default.nix               # Home Manager entry point
 │   │   ├── config/                   # Configuration files
 │   │   │   ├── p10k/                 # Powerlevel10k theme
 │   │   │   └── starship/             # Starship prompt config
 │   │   └── programs/                 # User program modules
-│   │       ├── neovim.nix           # 📝 Editor configuration
-│   │       ├── zsh.nix              # 🐚 Shell configuration  
-│   │       ├── development.nix      # 💻 Dev tools & languages
-│   │       └── cli-tools.nix        # 🔧 CLI utilities
-│   ├── nix-darwin/                   # 🖥️ System Configuration (Modular)
+│   │       ├── neovim.nix           # Editor configuration
+│   │       ├── zsh.nix              # Shell configuration  
+│   │       ├── development.nix      # Dev tools & languages
+│   │       └── cli-tools.nix        # CLI utilities
+│   ├── nix-darwin/                   # System Configuration (Modular)
 │   │   ├── default.nix              # Nix-Darwin entry point
-│   │   ├── fonts/                   # 🔤 Font management
-│   │   ├── security/                # 🔒 Security settings
-│   │   ├── users/                   # 👤 User accounts
-│   │   ├── system/                  # ⚙️ macOS defaults
-│   │   ├── programs/                # 📦 System packages
-│   │   └── homebrew/                # 🍺 Package management
+│   │   ├── fonts/                   # Font management
+│   │   ├── security/                # Security settings
+│   │   ├── users/                   # User accounts
+│   │   ├── system/                  # macOS defaults
+│   │   ├── programs/                # System packages
+│   │   ├── homebrew/                # Package management
+│   │   └── spicetify/               # Spotify customization
 │   ├── nixos/                       # Linux configurations
 │   └── shared/                      # Shared components
 ├── README.md                        # This file
 └── Taskfile.yml                     # Common tasks automation
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - macOS (tested on Sequoia)
@@ -111,7 +114,7 @@ darwin-rebuild switch --flake .#MAC-RNJMGYX0J5
 # For new machines - see "New Machine Setup" below
 ```
 
-## 🆕 New Machine Setup
+## New Machine Setup
 
 ### 1. Create Machine Configuration
 ```bash
@@ -140,28 +143,29 @@ darwinConfigurations = {
 darwin-rebuild switch --flake .#<your-hostname>
 ```
 
-## 🎨 Customization
+## Customization
 
-### 🖥️ System Configuration (Nix-Darwin)
+### System Configuration (Nix-Darwin)
 - **Fonts**: Edit `modules/nix-darwin/fonts/default.nix`
 - **macOS Settings**: Edit `modules/nix-darwin/system/default.nix`
 - **Homebrew Packages**: Edit `modules/nix-darwin/homebrew/default.nix`
 - **System Packages**: Edit `modules/nix-darwin/programs/default.nix`
+- **Spotify Customization**: Edit `modules/nix-darwin/spicetify/default.nix`
 
-### 🏠 User Configuration (Home Manager)  
+### User Configuration (Home Manager)  
 - **Shell**: Edit `modules/home-manager/programs/zsh.nix`
 - **Editor**: Edit `modules/home-manager/programs/neovim.nix`
 - **Dev Tools**: Edit `modules/home-manager/programs/development.nix`
 - **CLI Tools**: Edit `modules/home-manager/programs/cli-tools.nix`
 
-### 🔧 Adding New Modules
+### Adding New Modules
 The modular structure makes it easy to add new functionality:
 
 1. **System Module**: Create `modules/nix-darwin/<name>/default.nix`
 2. **User Module**: Create `modules/home-manager/programs/<name>.nix`
 3. **Import**: Add to respective `imports` list in `default.nix`
 
-## 📋 Common Tasks
+## Common Tasks
 
 This project includes a Taskfile for common operations:
 
@@ -175,7 +179,7 @@ task clean             # Clean up old profiles
 task gc                # Garbage collect old generations
 ```
 
-## 🐚 Environment Details
+## Environment Details
 
 ### Environment Variables
 - **XDG Directories**: `XDG_CONFIG_HOME`, `ZDOTDIR`, `ZSH_COMPDUMP`
@@ -197,7 +201,7 @@ $GOROOT/bin:$GOPATH/bin
 - **Plugins**: git, kubectl, brew, macos, colored-man-pages, terraform, docker
 - **Enhancements**: vi mode, history search, syntax highlighting, autosuggestions
 
-## 🔧 Maintenance
+## Maintenance
 
 ### Updating
 ```bash
@@ -213,7 +217,7 @@ task gc                               # Garbage collect
 sudo nix-collect-garbage -d           # System-wide cleanup
 ```
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -237,16 +241,16 @@ sudo nix-collect-garbage -d           # System-wide cleanup
    - Verify module file paths and names
    - Ensure new files are added to git
 
-## 🎯 Benefits of Modular Structure
+## Benefits of Modular Structure
 
-- **🔧 Easy Maintenance**: Each component in its own file
-- **🎯 Clear Organization**: Logical separation by functionality  
-- **🚀 Faster Development**: Modify only what you need
-- **📚 Better Documentation**: Self-documenting structure
-- **🔄 Reusability**: Modules can be easily shared or adapted
-- **🧪 Testing**: Test individual components independently
+- **Easy Maintenance**: Each component in its own file
+- **Clear Organization**: Logical separation by functionality  
+- **Faster Development**: Modify only what you need
+- **Better Documentation**: Self-documenting structure
+- **Reusability**: Modules can be easily shared or adapted
+- **Testing**: Test individual components independently
 
-## 🛠️ Development Environment
+## Development Environment
 
 To work on this configuration:
 ```bash
@@ -261,15 +265,16 @@ The development shell provides:
 - `statix` for linting
 - All development tools
 
-## 📊 System Overview
+## System Overview
 
 - **Total Packages**: 100+ via Nix + 44+ via Homebrew
-- **Modular Components**: 10 specialized modules  
+- **Modular Components**: 11 specialized modules  
 - **Configuration Files**: Organized and templated
 - **Maintenance Burden**: Minimal thanks to modular design
 - **Platform Support**: macOS (primary), NixOS (vm/testing)
+- **Music Enhancement**: Spotify with 17+ extensions and custom theming
 
-## 🧪 VMware Fusion Testing
+## VMware Fusion Testing
 
 ### Prerequisites
 - VMware Fusion Pro (recommended) or VMware Fusion Player
@@ -327,7 +332,7 @@ For system maintenance:
 - `task history` - Show the history of configurations
 - `task show-config` - Show the current system configuration
 
-## 📚 Additional Resources
+## Additional Resources
 
 - **Nix Manual**: https://nixos.org/manual/nix/stable/
 - **Nix-Darwin Documentation**: https://github.com/LnL7/nix-darwin
@@ -335,7 +340,7 @@ For system maintenance:
 - **NixOS Search**: https://search.nixos.org/packages
 - **Community Wiki**: https://nixos.wiki/
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to:
 - Report bugs and issues
@@ -343,6 +348,6 @@ Contributions are welcome! Please feel free to:
 - Submit pull requests for enhancements
 - Share your own modular configurations
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
