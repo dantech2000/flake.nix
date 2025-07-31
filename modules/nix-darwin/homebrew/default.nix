@@ -54,16 +54,16 @@ _:
 
     # Homebrew Casks
     casks = [
-      "1password"
       "1password-cli"
+      "1password"
       "arc"
       "aws-vault-binary"
-      "brave-browser"
       "contour"
       "cursor"
+      "brave-browser"
       "devtoys"
-      "discord"
       "displaylink"
+      "discord"
       "docker-desktop"
       "dropbox"
       "element"
@@ -78,8 +78,8 @@ _:
       "insomnia"
       "notion"
       "obsidian"
-      "raycast"
       "rectangle"
+      "raycast"
       "session-manager-plugin"
       "slack"
       "telegram"
@@ -87,6 +87,7 @@ _:
       "vagrant"
       "visual-studio-code"
       "vlc"
+      "zed"
       "zen"
     ];
   };
