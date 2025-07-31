@@ -64,6 +64,16 @@
         ];
       };
 
+      # Function to create standalone home-manager configurations
+      mkHomeManagerConfig = { system, hostname, user }: home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.${system};
+        extraSpecialArgs = { inherit inputs user hostname; };
+        modules = [
+          { nixpkgs = nixpkgsConfig; }
+          ./modules/home-manager
+        ];
+      };
+
       # Function to create NixOS-specific configurations
     in
     (eachDefaultSystem (system: {
@@ -88,11 +98,6 @@
     })) // {
       # Darwin Configurations
       darwinConfigurations = {
-        "drodriguezs-MacBook-Pro" = mkDarwinConfig {
-          system = "x86_64-darwin";
-          hostname = "drodriguezs-MacBook-Pro";
-          user = "drodriguez";
-        };
         "MAC-RNJMGYX0J5" = mkDarwinConfig {
           system = "arm64-darwin";
           hostname = "MAC-RNJMGYX0J5";
@@ -100,18 +105,17 @@
         };
       };
 
-      # NixOS Configurations
-      nixosConfigurations = {
-        # Desktop Configuration (commented out until needed)
-        # "nixos-desktop" = mkNixosConfig {
-        #   system = "x86_64-linux";
-        #   hostname = "nixos-desktop";
-        #   user = "drodriguez";
-        # };
+      # Home Manager Configurations (for non-NixOS Linux systems)
+      homeConfigurations = {
+        "serenity" = mkHomeManagerConfig {
+          system = "x86_64-linux";
+          hostname = "serenity";
+          user = "drodriguez";
+        };
       };
 
       # Add packages output for compatibility
-      packages.x86_64-darwin.default = self.darwinConfigurations."drodriguezs-MacBook-Pro".system;
       packages.arm64-darwin.default = self.darwinConfigurations."MAC-RNJMGYX0J5".system;
+      packages.x86_64-linux.default = self.homeConfigurations."serenity".activationPackage;
     };
 }
