@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 {
   # ZSH-related packages
@@ -19,7 +19,6 @@
     FZF_DEFAULT_COMMAND = "rg --files --hidden --follow --no-ignore-vcs";
     FZF_DEFAULT_OPTS = "--height 40% --layout=reverse --border";
     CARAPACE_BRIDGES = "zsh,fish,bash,inshellisense";
-    STARSHIP_CONFIG = "$HOME/.config/starship/starship.toml";
     ZSH_COMPDUMP = "$HOME/.cache/zsh/.zcompdump";
   };
 
@@ -30,19 +29,19 @@
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
 
-    initExtraFirst = ''
-      # Set umask
-      umask 022
-      # Suppress Powerlevel10k instant prompt errors
-      typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
-      # Powerlevel10k instant prompt (keep at the top for performance reasons)
-      local username="''${USER:-$(whoami)}"
-      if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${username}.zsh" ]]; then
-        source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${username}.zsh"
-      fi
-    '';
-
-    initExtra = ''
+    initContent = lib.mkMerge [
+      (lib.mkOrder 550 ''
+        # Set umask
+        umask 022
+        # Suppress Powerlevel10k instant prompt errors
+        typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+        # Powerlevel10k instant prompt (keep at the top for performance reasons)
+        local username="''${USER:-$(whoami)}"
+        if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${username}.zsh" ]]; then
+          source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${username}.zsh"
+        fi
+      '')
+      (lib.mkOrder 1200 ''
       # For Debugging (commented out by default)
       # set -x
       eval "$(/opt/homebrew/bin/brew shellenv)"         
@@ -85,7 +84,8 @@
 
       # Add Asdf shims
       export PATH="${"$"}{ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
-    '';
+      '')
+    ];
 
     shellAliases = {
       k = "kubectl";

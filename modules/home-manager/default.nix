@@ -1,9 +1,12 @@
-{ lib, pkgs, ... }:
+{ lib, pkgs, config, ... }:
 
 {
   imports = [
     ./programs
   ];
+
+  # Required user configuration for standalone Home Manager 
+  # Darwin integration handles this automatically, standalone needs explicit config
 
   # Home Manager version
   home.stateVersion = "25.05";

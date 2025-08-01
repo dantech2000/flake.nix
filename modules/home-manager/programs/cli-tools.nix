@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 {
   # CLI utilities and system tools
@@ -52,5 +52,11 @@
 
     # Example/test package
     hello # GNU Hello (example package)
+  ] ++ lib.optionals stdenv.isLinux [
+    # Linux-specific packages
+    # Add any Linux-only CLI tools here when needed
+  ] ++ lib.optionals stdenv.isDarwin [
+    # macOS-specific packages (most Darwin apps come via Homebrew)
+    # Add any macOS-only CLI tools here when needed
   ];
 }

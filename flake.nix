@@ -8,8 +8,6 @@
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
-    # NixOS dependencies
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     # Shared dependencies
     home-manager.url = "github:nix-community/home-manager";
@@ -71,6 +69,10 @@
         modules = [
           { nixpkgs = nixpkgsConfig; }
           ./modules/home-manager
+          {
+            home.username = user;
+            home.homeDirectory = if (nixpkgs.legacyPackages.${system}.stdenv.isLinux) then "/home/${user}" else "/Users/${user}";
+          }
         ];
       };
 
