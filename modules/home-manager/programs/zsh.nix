@@ -78,6 +78,7 @@
       export PATH="$GOROOT/bin:$PATH"
       export PATH="$PATH:$GOPATH/bin"
       export PATH="/Applications/Windsurf.app/Contents/MacOS:$PATH"
+      export PATH="~/.local/bin:$PATH"
 
       [ -e /usr/local/bin/windsurf ] || ln -s /Applications/Windsurf.app/Contents/MacOS/Electron /usr/local/bin/windsurf
       source <(fzf --zsh)
