@@ -24,7 +24,6 @@
     stow # Symlink management
 
     # Cloud and DevOps tools
-    awscli2 # AWS CLI
     (pkgs.wrapHelm pkgs.kubernetes-helm { plugins = [ pkgs.kubernetes-helmPlugins.helm-diff ]; })
     helmfile-wrapped # Helm charts management
     k9s # Kubernetes TUI
@@ -46,6 +45,7 @@
 
     # Databases and data tools
     mongosh # MongoDB shell
+    nixd # Nix package manager
     redis # Redis CLI
     redli # Redis client
     sqlite # SQLite
@@ -75,8 +75,12 @@
     userEmail = "drodriguez@codecademy.com";
     extraConfig = {
       github.user = "dantech2000";
-      init = { defaultBranch = "trunk"; };
-      diff = { external = "${pkgs.difftastic}/bin/difft"; };
+      init = {
+        defaultBranch = "trunk";
+      };
+      diff = {
+        external = "${pkgs.difftastic}/bin/difft";
+      };
     };
   };
 }

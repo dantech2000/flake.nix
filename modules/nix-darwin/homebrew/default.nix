@@ -35,6 +35,11 @@ _:
         clone_target = "https://github.com/sst/homebrew-tap";
         force_auto_update = true;
       }
+      {
+        name = "kreuzwerker/taps";
+        clone_target = "https://github.com/kreuzwerker/homebrew-taps";
+        force_auto_update = true;
+      }
     ];
 
     # Homebrew Formulae
@@ -50,6 +55,7 @@ _:
       "shopify/shopify/shopify-cli"
       "snappy"
       "tfenv"
+      "kreuzwerker/taps/m1-terraform-provider-helper"
     ];
 
     # Homebrew Casks

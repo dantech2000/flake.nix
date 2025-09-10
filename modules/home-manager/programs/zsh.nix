@@ -45,6 +45,16 @@
       # For Debugging (commented out by default)
       # set -x
       eval "$(/opt/homebrew/bin/brew shellenv)"         
+      # Ensure Nix profiles precede Homebrew in PATH
+      if [ -d "/run/current-system/sw/bin" ]; then
+        export PATH="/run/current-system/sw/bin:$PATH"
+      fi
+      if [ -d "/etc/profiles/per-user/$USER/bin" ]; then
+        export PATH="/etc/profiles/per-user/$USER/bin:$PATH"
+      fi
+      if [ -d "$HOME/.nix-profile/bin" ]; then
+        export PATH="$HOME/.nix-profile/bin:$PATH"
+      fi
       # ASDF Init (guarded)
       [ -f "$HOME/.asdf/asdf.sh" ] && . "$HOME/.asdf/asdf.sh"
       [ -f "$HOME/.asdf/completions/asdf.bash" ] && . "$HOME/.asdf/completions/asdf.bash"

@@ -9,6 +9,7 @@
     pkgs.mkalias
     pkgs.nixpkgs-fmt
     pkgs.gitAndTools.gitFull
+    pkgs.cf-terraforming
   ];
 
   # System-level ZSH configuration
