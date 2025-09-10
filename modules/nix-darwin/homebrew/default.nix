@@ -56,6 +56,7 @@ _:
       "snappy"
       "tfenv"
       "kreuzwerker/taps/m1-terraform-provider-helper"
+      "codex"
     ];
 
     # Homebrew Casks
