@@ -49,44 +49,44 @@ in {
         eval "$(/opt/homebrew/bin/brew shellenv)"
       ''))
       (lib.mkOrder 1200 ''
-              # For Debugging (commented out by default)
+        # For Debugging (commented out by default)
 
-              # set -x
-              # ASDF Init (guarded)
-              [ -f "$HOME/.asdf/asdf.sh" ] && . "$HOME/.asdf/asdf.sh"
-              [ -f "$HOME/.asdf/completions/asdf.bash" ] && . "$HOME/.asdf/completions/asdf.bash"
+        # set -x
+        # ASDF Init (guarded)
+        [ -f "$HOME/.asdf/asdf.sh" ] && . "$HOME/.asdf/asdf.sh"
+        [ -f "$HOME/.asdf/completions/asdf.bash" ] && . "$HOME/.asdf/completions/asdf.bash"
 
-              # History and completion settings
-              setopt autocd interactive_comments INC_APPEND_HISTORY
-              autoload -Uz compinit
-              compinit -C
+        # History and completion settings
+        setopt autocd interactive_comments INC_APPEND_HISTORY
+        autoload -Uz compinit
+        compinit -C
 
-              # Vi mode settings and key bindings
-              bindkey '^R' history-incremental-search-backward
-              bindkey -v
+        # Vi mode settings and key bindings
+        bindkey '^R' history-incremental-search-backward
+        bindkey -v
 
-              # Kubectl completion
-              source <(kubectl completion zsh)
+        # Kubectl completion
+        source <(kubectl completion zsh)
 
-              # Carapace completion
-              export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'
-              zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
-              source <(carapace _carapace)
-              zstyle ':completion:*:git:*' group-order 'main commands' 'alias commands' 'external commands'
+        # Carapace completion
+        export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'
+        zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+        source <(carapace _carapace)
+        zstyle ':completion:*:git:*' group-order 'main commands' 'alias commands' 'external commands'
 
-              # Powerlevel10k theme from Nix package (correct path)
-              source "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme"
-              if [ -f "$XDG_CONFIG_HOME/p10k/p10k.zsh" ]; then
-                source "$XDG_CONFIG_HOME/p10k/p10k.zsh"
-              fi
+        # Powerlevel10k theme from Nix package (correct path)
+        source "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme"
+        if [ -f "$XDG_CONFIG_HOME/p10k/p10k.zsh" ]; then
+          source "$XDG_CONFIG_HOME/p10k/p10k.zsh"
+        fi
 
-              # Add additional paths
-              export PATH="$GOROOT/bin:$PATH"
-              export PATH="$PATH:$GOPATH/bin"
+        # Add additional paths
+        export PATH="$GOROOT/bin:$PATH"
+        export PATH="$PATH:$GOPATH/bin"
 
 
-              # Add Asdf shims
-              export PATH="${"$"}{ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+        # Add Asdf shims
+        export PATH="${"$"}{ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
       '')
       (lib.mkIf isDarwin (lib.mkOrder 1300 ''
         # Mac-specific paths
