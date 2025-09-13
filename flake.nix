@@ -20,65 +20,84 @@
     #spicetify-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nix-darwin, home-manager, nixpkgs, flake-utils, ... }@inputs:
-    let
-      inherit (flake-utils.lib) eachDefaultSystem;
+  outputs = {
+    self,
+    nix-darwin,
+    home-manager,
+    nixpkgs,
+    flake-utils,
+    ...
+  } @ inputs: let
+    inherit (flake-utils.lib) eachDefaultSystem;
 
-      # Shared configuration for both Darwin and NixOS
-      sharedModules = {
-        home-manager.useGlobalPkgs = true;
-        home-manager.useUserPackages = true;
+    # Shared configuration for both Darwin and NixOS
+    sharedModules = {
+      home-manager.useGlobalPkgs = true;
+      home-manager.useUserPackages = true;
+    };
+
+    # Nixpkgs configuration
+    nixpkgsConfig = {
+      config = {
+        allowUnfree = true;
+        allowUnfreePredicate = _: true;
       };
+    };
 
-      # Nixpkgs configuration
-      nixpkgsConfig = {
-        config = {
-          allowUnfree = true;
-          allowUnfreePredicate = _: true;
-        };
-      };
+    # Function to create system-specific configurations
 
-      # Function to create system-specific configurations
-
-      # Function to create Darwin-specific configurations
-      mkDarwinConfig = { system, hostname, user }: nix-darwin.lib.darwinSystem {
+    # Function to create Darwin-specific configurations
+    mkDarwinConfig = {
+      system,
+      hostname,
+      user,
+    }:
+      nix-darwin.lib.darwinSystem {
         inherit system;
-        specialArgs = { inherit inputs user hostname; };
+        specialArgs = {inherit inputs user hostname;};
         modules = [
           ./modules/nix-darwin
-          { nixpkgs = nixpkgsConfig; }
+          {nixpkgs = nixpkgsConfig;}
           home-manager.darwinModules.home-manager
-          (sharedModules // {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              backupFileExtension = "backup";
-              users.${user} = {
-                imports = [
-                  ./modules/home-manager
-                ];
+          (sharedModules
+            // {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                backupFileExtension = "backup";
+                users.${user} = {
+                  imports = [
+                    ./modules/home-manager
+                  ];
+                };
               };
-            };
-          })
+            })
         ];
       };
 
-      # Function to create standalone home-manager configurations
-      mkHomeManagerConfig = { system, hostname, user }: home-manager.lib.homeManagerConfiguration {
+    # Function to create standalone home-manager configurations
+    mkHomeManagerConfig = {
+      system,
+      hostname,
+      user,
+    }:
+      home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.${system};
-        extraSpecialArgs = { inherit inputs user hostname; };
+        extraSpecialArgs = {inherit inputs user hostname;};
         modules = [
-          { nixpkgs = nixpkgsConfig; }
+          {nixpkgs = nixpkgsConfig;}
           ./modules/home-manager
           {
             home.username = user;
-            home.homeDirectory = if (nixpkgs.legacyPackages.${system}.stdenv.isLinux) then "/home/${user}" else "/Users/${user}";
+            home.homeDirectory =
+              if (nixpkgs.legacyPackages.${system}.stdenv.isLinux)
+              then "/home/${user}"
+              else "/Users/${user}";
           }
         ];
       };
-
-      # Function to create NixOS-specific configurations
-    in
+    # Function to create NixOS-specific configurations
+  in
     (eachDefaultSystem (system: {
       # Development shell and formatting tools
       formatter = nixpkgs.legacyPackages.${system}.nixpkgs-fmt;
@@ -98,7 +117,8 @@
           exec ${nixpkgs.legacyPackages.${system}.zsh}/bin/zsh
         '';
       };
-    })) // {
+    }))
+    // {
       # Darwin Configurations
       darwinConfigurations = {
         "MAC-RNJMGYX0J5" = mkDarwinConfig {

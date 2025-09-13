@@ -1,12 +1,11 @@
-{ inputs
-, pkgs
-, ...
-}:
-let
-  spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.system};
-in
 {
-  imports = [ inputs.spicetify-nix.darwinModules.spicetify ];
+  inputs,
+  pkgs,
+  ...
+}: let
+  spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.system};
+in {
+  imports = [inputs.spicetify-nix.darwinModules.spicetify];
 
   programs.spicetify = {
     enable = true;

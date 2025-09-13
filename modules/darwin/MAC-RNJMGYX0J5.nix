@@ -1,6 +1,4 @@
-{ user, ... }:
-
-{
+{user, ...}: {
   # Core nix-darwin configuration for MAC-RNJMGYX0J5
   # All other functionality has been migrated to modular structure
 
@@ -9,7 +7,7 @@
 
   # Nix configuration for flakes (when using Determinate Nix)
   nix.settings = {
-    trusted-users = [ "root" user ];
+    trusted-users = ["root" user];
     experimental-features = "nix-command flakes";
   };
 

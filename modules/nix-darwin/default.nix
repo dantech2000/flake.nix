@@ -1,9 +1,7 @@
-{ hostname, ... }:
-
-{
+{hostname, ...}: {
   # Complete modular nix-darwin configuration
   imports = [
-    ../darwin/${hostname}.nix  # Keep core settings temporarily
+    ../darwin/${hostname}.nix # Keep core settings temporarily
     ./fonts # Fonts: Nix fonts installation
     ./security # Security: TouchID authentication
     ./users # Users: User account management

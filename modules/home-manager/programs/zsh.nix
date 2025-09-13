@@ -1,9 +1,10 @@
-{ lib, pkgs, ... }:
-
-let
-  isDarwin = pkgs.stdenv.isDarwin;
-in
 {
+  lib,
+  pkgs,
+  ...
+}: let
+  isDarwin = pkgs.stdenv.isDarwin;
+in {
   # ZSH-related packages
   home.packages = with pkgs; [
     zsh
@@ -45,68 +46,68 @@ in
         fi
       '')
       (lib.mkIf isDarwin (lib.mkOrder 600 ''
-          eval "$(/opt/homebrew/bin/brew shellenv)"
+        eval "$(/opt/homebrew/bin/brew shellenv)"
       ''))
       (lib.mkOrder 1200 ''
-      # For Debugging (commented out by default)
-<<<<<<< Updated upstream
-      # set -x
-      eval "$(/opt/homebrew/bin/brew shellenv)"         
-      # Ensure Nix profiles precede Homebrew in PATH
-      if [ -d "/run/current-system/sw/bin" ]; then
-        export PATH="/run/current-system/sw/bin:$PATH"
-      fi
-      if [ -d "/etc/profiles/per-user/$USER/bin" ]; then
-        export PATH="/etc/profiles/per-user/$USER/bin:$PATH"
-      fi
-      if [ -d "$HOME/.nix-profile/bin" ]; then
-        export PATH="$HOME/.nix-profile/bin:$PATH"
-      fi
-=======
-      # set -x     
->>>>>>> Stashed changes
-      # ASDF Init (guarded)
-      [ -f "$HOME/.asdf/asdf.sh" ] && . "$HOME/.asdf/asdf.sh"
-      [ -f "$HOME/.asdf/completions/asdf.bash" ] && . "$HOME/.asdf/completions/asdf.bash"
+              # For Debugging (commented out by default)
+        <<<<<<< Updated upstream
+              # set -x
+              eval "$(/opt/homebrew/bin/brew shellenv)"
+              # Ensure Nix profiles precede Homebrew in PATH
+              if [ -d "/run/current-system/sw/bin" ]; then
+                export PATH="/run/current-system/sw/bin:$PATH"
+              fi
+              if [ -d "/etc/profiles/per-user/$USER/bin" ]; then
+                export PATH="/etc/profiles/per-user/$USER/bin:$PATH"
+              fi
+              if [ -d "$HOME/.nix-profile/bin" ]; then
+                export PATH="$HOME/.nix-profile/bin:$PATH"
+              fi
+        =======
+              # set -x
+        >>>>>>> Stashed changes
+              # ASDF Init (guarded)
+              [ -f "$HOME/.asdf/asdf.sh" ] && . "$HOME/.asdf/asdf.sh"
+              [ -f "$HOME/.asdf/completions/asdf.bash" ] && . "$HOME/.asdf/completions/asdf.bash"
 
-      # History and completion settings
-      setopt autocd interactive_comments INC_APPEND_HISTORY
-      autoload -Uz compinit
-      compinit -C
+              # History and completion settings
+              setopt autocd interactive_comments INC_APPEND_HISTORY
+              autoload -Uz compinit
+              compinit -C
 
-      # Vi mode settings and key bindings
-      bindkey '^R' history-incremental-search-backward
-      bindkey -v
+              # Vi mode settings and key bindings
+              bindkey '^R' history-incremental-search-backward
+              bindkey -v
 
-      # Kubectl completion
-      source <(kubectl completion zsh)
+              # Kubectl completion
+              source <(kubectl completion zsh)
 
-      # Carapace completion
-      export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'
-      zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
-      source <(carapace _carapace)
-      zstyle ':completion:*:git:*' group-order 'main commands' 'alias commands' 'external commands'
+              # Carapace completion
+              export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'
+              zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+              source <(carapace _carapace)
+              zstyle ':completion:*:git:*' group-order 'main commands' 'alias commands' 'external commands'
 
-      # Powerlevel10k theme from Nix package (correct path)
-      source "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme"
-      if [ -f "$XDG_CONFIG_HOME/p10k/p10k.zsh" ]; then
-        source "$XDG_CONFIG_HOME/p10k/p10k.zsh"
-      fi
-      
-      # Add additional paths
-      export PATH="$GOROOT/bin:$PATH"
-      export PATH="$PATH:$GOPATH/bin"
-<<<<<<< Updated upstream
-      export PATH="/Applications/Windsurf.app/Contents/MacOS:$PATH"
-      export PATH="~/.local/bin:$PATH"
+              # Powerlevel10k theme from Nix package (correct path)
+              source "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme"
+              if [ -f "$XDG_CONFIG_HOME/p10k/p10k.zsh" ]; then
+                source "$XDG_CONFIG_HOME/p10k/p10k.zsh"
+              fi
 
-      [ -e /usr/local/bin/windsurf ] || ln -s /Applications/Windsurf.app/Contents/MacOS/Electron /usr/local/bin/windsurf
-      source <(fzf --zsh)
-=======
->>>>>>> Stashed changes
+              # Add additional paths
+              export PATH="$GOROOT/bin:$PATH"
+              export PATH="$PATH:$GOPATH/bin"
+        <<<<<<< Updated upstream
+              export PATH="/Applications/Windsurf.app/Contents/MacOS:$PATH"
+              export PATH="~/.local/bin:$PATH"
 
-      # Add Asdf shims
-      export PATH="${"$"}{ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+              [ -e /usr/local/bin/windsurf ] || ln -s /Applications/Windsurf.app/Contents/MacOS/Electron /usr/local/bin/windsurf
+              source <(fzf --zsh)
+        =======
+        >>>>>>> Stashed changes
+
+              # Add Asdf shims
+              export PATH="${"$"}{ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
       '')
       (lib.mkIf isDarwin (lib.mkOrder 1300 ''
         # Mac-specific paths
@@ -116,37 +117,41 @@ in
       ''))
     ];
 
-    shellAliases = {
-      k = "kubectl";
-      ls = "eza --icons=always";
-      lss = "/bin/ls";
-      tmux = "tmux -f ~/.config/tmux/tmux.conf";
-      p = "ping google.com";
-      shell = "vim $ZDOTDIR/.zshrc";
-      profile = "vim $HOME/.zprofile";
-      gpinit = "git push --set-upstream origin \"$(git symbolic-ref --short HEAD)\"";
-    } // lib.optionalAttrs isDarwin {
-      ll = "/usr/local/bin/lsd --long --group-dirs=first";
-      lla = "/usr/local/bin/lsd --long --all --group-dirs=first";
-      llt = "/usr/local/bin/lsd --tree --all";
-      rebuild = "darwin-rebuild switch --flake ~/.config/nix-darwin";
-    };
+    shellAliases =
+      {
+        k = "kubectl";
+        ls = "eza --icons=always";
+        lss = "/bin/ls";
+        tmux = "tmux -f ~/.config/tmux/tmux.conf";
+        p = "ping google.com";
+        shell = "vim $ZDOTDIR/.zshrc";
+        profile = "vim $HOME/.zprofile";
+        gpinit = "git push --set-upstream origin \"$(git symbolic-ref --short HEAD)\"";
+      }
+      // lib.optionalAttrs isDarwin {
+        ll = "/usr/local/bin/lsd --long --group-dirs=first";
+        lla = "/usr/local/bin/lsd --long --all --group-dirs=first";
+        llt = "/usr/local/bin/lsd --tree --all";
+        rebuild = "darwin-rebuild switch --flake ~/.config/nix-darwin";
+      };
 
     oh-my-zsh = {
       enable = true;
-      plugins = [
-        "git"
-        "kubectl"
-        "colored-man-pages"
-        "virtualenv"
-        "terraform"
-        "tmux"
-        "docker"
-        "ssh-agent"
-      ] ++ lib.optionals isDarwin [
-        "brew"
-        "macos"
-      ];
+      plugins =
+        [
+          "git"
+          "kubectl"
+          "colored-man-pages"
+          "virtualenv"
+          "terraform"
+          "tmux"
+          "docker"
+          "ssh-agent"
+        ]
+        ++ lib.optionals isDarwin [
+          "brew"
+          "macos"
+        ];
     };
   };
 

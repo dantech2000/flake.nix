@@ -1,11 +1,14 @@
-{ lib, pkgs, config, ... }:
-
 {
+  lib,
+  pkgs,
+  config,
+  ...
+}: {
   imports = [
     ./programs
   ];
 
-  # Required user configuration for standalone Home Manager 
+  # Required user configuration for standalone Home Manager
   # Darwin integration handles this automatically, standalone needs explicit config
 
   # Home Manager version

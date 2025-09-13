@@ -1,10 +1,8 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   # Environment configuration
   environment = {
-    shells = with pkgs; [ zsh ];
-    systemPath = [ "/opt/homebrew/bin" ];
+    shells = with pkgs; [zsh];
+    systemPath = ["/opt/homebrew/bin"];
     pathsToLink = [
       "/Applications"
       "/Applications/Utilities"
@@ -39,13 +37,11 @@
       autohide = true;
     };
 
-    # Finder Configuration 
+    # Finder Configuration
     finder = {
       FXPreferredViewStyle = "clmv";
       ShowStatusBar = true;
       ShowPathbar = true;
     };
   };
-
-
 }

@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   # System-wide fonts installation
   fonts.packages = with pkgs; [
     nerd-fonts.monaspace
