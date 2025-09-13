@@ -54,14 +54,14 @@ jobs:
     - name: Validate Nix formatting
       run: |
         # Check if all .nix files are properly formatted
-        if command -v nixpkgs-fmt >/dev/null 2>&1; then
+        if command -v alejandra >/dev/null 2>&1; then
           echo "Checking Nix file formatting..."
-          nixpkgs-fmt --check .
+          alejandra --check .
         else
-          echo "Installing nixpkgs-fmt..."
-          nix profile install nixpkgs#nixpkgs-fmt
+          echo "Installing alejandra..."
+          nix profile install nixpkgs#alejandra
           echo "Checking Nix file formatting..."
-          nixpkgs-fmt --check .
+          alejandra --check .
         fi
 
     - name: Test home-manager configuration
