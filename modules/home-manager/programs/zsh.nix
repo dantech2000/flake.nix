@@ -3,7 +3,7 @@
   pkgs,
   ...
 }: let
-  isDarwin = pkgs.stdenv.isDarwin;
+  inherit (pkgs.stdenv) isDarwin;
 in {
   # ZSH-related packages
   home.packages = with pkgs; [
@@ -50,22 +50,8 @@ in {
       ''))
       (lib.mkOrder 1200 ''
               # For Debugging (commented out by default)
-        <<<<<<< Updated upstream
+
               # set -x
-              eval "$(/opt/homebrew/bin/brew shellenv)"
-              # Ensure Nix profiles precede Homebrew in PATH
-              if [ -d "/run/current-system/sw/bin" ]; then
-                export PATH="/run/current-system/sw/bin:$PATH"
-              fi
-              if [ -d "/etc/profiles/per-user/$USER/bin" ]; then
-                export PATH="/etc/profiles/per-user/$USER/bin:$PATH"
-              fi
-              if [ -d "$HOME/.nix-profile/bin" ]; then
-                export PATH="$HOME/.nix-profile/bin:$PATH"
-              fi
-        =======
-              # set -x
-        >>>>>>> Stashed changes
               # ASDF Init (guarded)
               [ -f "$HOME/.asdf/asdf.sh" ] && . "$HOME/.asdf/asdf.sh"
               [ -f "$HOME/.asdf/completions/asdf.bash" ] && . "$HOME/.asdf/completions/asdf.bash"
@@ -97,14 +83,7 @@ in {
               # Add additional paths
               export PATH="$GOROOT/bin:$PATH"
               export PATH="$PATH:$GOPATH/bin"
-        <<<<<<< Updated upstream
-              export PATH="/Applications/Windsurf.app/Contents/MacOS:$PATH"
-              export PATH="~/.local/bin:$PATH"
 
-              [ -e /usr/local/bin/windsurf ] || ln -s /Applications/Windsurf.app/Contents/MacOS/Electron /usr/local/bin/windsurf
-              source <(fzf --zsh)
-        =======
-        >>>>>>> Stashed changes
 
               # Add Asdf shims
               export PATH="${"$"}{ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"

@@ -90,7 +90,7 @@
           {
             home.username = user;
             home.homeDirectory =
-              if (nixpkgs.legacyPackages.${system}.stdenv.isLinux)
+              if nixpkgs.legacyPackages.${system}.stdenv.isLinux
               then "/home/${user}"
               else "/Users/${user}";
           }
