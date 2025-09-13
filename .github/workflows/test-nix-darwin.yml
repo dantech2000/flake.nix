@@ -104,10 +104,10 @@ jobs:
         nix profile install nixpkgs#statix
         statix check .
 
-    - name: Check formatting with nixpkgs-fmt
+    - name: Check formatting with alejandra
       run: |
-        nix profile install nixpkgs#nixpkgs-fmt
-        nixpkgs-fmt --check .
+        nix profile install nixpkgs#alejandra
+        alejandra --check .
 
     - name: Check for dead code with deadnix  
       run: |
