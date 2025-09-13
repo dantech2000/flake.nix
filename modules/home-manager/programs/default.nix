@@ -6,5 +6,6 @@
     ./zsh.nix
     ./development.nix
     ./cli-tools.nix
+
   ];
 }

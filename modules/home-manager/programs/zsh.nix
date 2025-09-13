@@ -1,5 +1,8 @@
 { lib, pkgs, ... }:
 
+let
+  isDarwin = pkgs.stdenv.isDarwin;
+in
 {
   # ZSH-related packages
   home.packages = with pkgs; [
@@ -41,8 +44,12 @@
           source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${username}.zsh"
         fi
       '')
+      (lib.mkIf isDarwin (lib.mkOrder 600 ''
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+      ''))
       (lib.mkOrder 1200 ''
       # For Debugging (commented out by default)
+<<<<<<< Updated upstream
       # set -x
       eval "$(/opt/homebrew/bin/brew shellenv)"         
       # Ensure Nix profiles precede Homebrew in PATH
@@ -55,6 +62,9 @@
       if [ -d "$HOME/.nix-profile/bin" ]; then
         export PATH="$HOME/.nix-profile/bin:$PATH"
       fi
+=======
+      # set -x     
+>>>>>>> Stashed changes
       # ASDF Init (guarded)
       [ -f "$HOME/.asdf/asdf.sh" ] && . "$HOME/.asdf/asdf.sh"
       [ -f "$HOME/.asdf/completions/asdf.bash" ] && . "$HOME/.asdf/completions/asdf.bash"
@@ -84,18 +94,26 @@
       fi
       
       # Add additional paths
-      export PATH="/usr/local/opt/llvm/bin/clangd:/Library/Frameworks/Python.framework/Versions/3.7/bin:$PATH"
       export PATH="$GOROOT/bin:$PATH"
       export PATH="$PATH:$GOPATH/bin"
+<<<<<<< Updated upstream
       export PATH="/Applications/Windsurf.app/Contents/MacOS:$PATH"
       export PATH="~/.local/bin:$PATH"
 
       [ -e /usr/local/bin/windsurf ] || ln -s /Applications/Windsurf.app/Contents/MacOS/Electron /usr/local/bin/windsurf
       source <(fzf --zsh)
+=======
+>>>>>>> Stashed changes
 
       # Add Asdf shims
       export PATH="${"$"}{ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
       '')
+      (lib.mkIf isDarwin (lib.mkOrder 1300 ''
+        # Mac-specific paths
+        export PATH="/usr/local/opt/llvm/bin/clangd:/Library/Frameworks/Python.framework/Versions/3.7/bin:$PATH"
+        export PATH="/Applications/Windsurf.app/Contents/MacOS:$PATH"
+        [ -e /usr/local/bin/windsurf ] || ln -s /Applications/Windsurf.app/Contents/MacOS/Electron /usr/local/bin/windsurf
+      ''))
     ];
 
     shellAliases = {
@@ -104,12 +122,13 @@
       lss = "/bin/ls";
       tmux = "tmux -f ~/.config/tmux/tmux.conf";
       p = "ping google.com";
-      ll = "/usr/local/bin/lsd --long --group-dirs=first";
-      lla = "/usr/local/bin/lsd --long --all --group-dirs=first";
-      llt = "/usr/local/bin/lsd --tree --all";
       shell = "vim $ZDOTDIR/.zshrc";
       profile = "vim $HOME/.zprofile";
       gpinit = "git push --set-upstream origin \"$(git symbolic-ref --short HEAD)\"";
+    } // lib.optionalAttrs isDarwin {
+      ll = "/usr/local/bin/lsd --long --group-dirs=first";
+      lla = "/usr/local/bin/lsd --long --all --group-dirs=first";
+      llt = "/usr/local/bin/lsd --tree --all";
       rebuild = "darwin-rebuild switch --flake ~/.config/nix-darwin";
     };
 
@@ -118,14 +137,15 @@
       plugins = [
         "git"
         "kubectl"
-        "brew"
-        "macos"
         "colored-man-pages"
         "virtualenv"
         "terraform"
         "tmux"
         "docker"
         "ssh-agent"
+      ] ++ lib.optionals isDarwin [
+        "brew"
+        "macos"
       ];
     };
   };
