@@ -30,6 +30,9 @@
   } @ inputs: let
     inherit (flake-utils.lib) eachDefaultSystem;
 
+    # User
+    user = "drodriguez";
+
     # Shared configuration for both Darwin and NixOS
     sharedModules = {
       home-manager.useGlobalPkgs = true;
@@ -124,7 +127,7 @@
         "MAC-RNJMGYX0J5" = mkDarwinConfig {
           system = "arm64-darwin";
           hostname = "MAC-RNJMGYX0J5";
-          user = "drodriguez";
+          user = user;
         };
       };
 
@@ -133,7 +136,7 @@
         "serenity" = mkHomeManagerConfig {
           system = "x86_64-linux";
           hostname = "serenity";
-          user = "drodriguez";
+          user = user;
         };
       };
 
