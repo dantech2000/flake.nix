@@ -52,6 +52,9 @@
     pnpm # Node package manager
     yarn # Node package manager
 
+    # AI Tools
+    claude-code
+
     # Code quality and analysis
     shellcheck # Shell script linting
 
