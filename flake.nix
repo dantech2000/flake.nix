@@ -2,16 +2,16 @@
   description = "D Rod's Darwin and NixOS system flake";
 
   inputs = {
-    # Use a matching Nixpkgs release for macOS
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-25.05-darwin";
+    # Use nixpkgs unstable for latest packages
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
-    # Darwin dependencies (must match the Nixpkgs release)
-    nix-darwin.url = "github:LnL7/nix-darwin/nix-darwin-25.05";
+    # Darwin dependencies (using master to track unstable)
+    nix-darwin.url = "github:LnL7/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     # Shared dependencies
-    # Pin Home Manager to the corresponding release and follow the same Nixpkgs
-    home-manager.url = "github:nix-community/home-manager/release-25.05";
+    # Use Home Manager master to track unstable nixpkgs
+    home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
 

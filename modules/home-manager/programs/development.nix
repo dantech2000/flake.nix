@@ -33,7 +33,7 @@
     stern # Multi-pod log tailing
 
     # Infrastructure and automation
-    ansible-lint # Ansible linting
+    # ansible-lint # Ansible linting (temporarily disabled due to ncclient hash mismatch in unstable)
     packer # Image building
     terraform-ls # Terraform language server
     terraformer # Terraform import tool
