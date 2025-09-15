@@ -54,6 +54,7 @@
 
     # AI Tools
     claude-code
+    codex
 
     # Code quality and analysis
     shellcheck # Shell script linting
