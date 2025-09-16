@@ -127,7 +127,7 @@
         "MAC-RNJMGYX0J5" = mkDarwinConfig {
           system = "arm64-darwin";
           hostname = "MAC-RNJMGYX0J5";
-          user = user;
+          inherit user;
         };
       };
 
@@ -136,7 +136,7 @@
         "serenity" = mkHomeManagerConfig {
           system = "x86_64-linux";
           hostname = "serenity";
-          user = user;
+          inherit user;
         };
       };
 
