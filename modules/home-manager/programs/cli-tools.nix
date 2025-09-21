@@ -2,9 +2,11 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   # CLI utilities and system tools
-  home.packages = with pkgs;
+  home.packages =
+    with pkgs;
     [
       # Core utilities (better versions)
       bat # Better cat with syntax highlighting
@@ -37,6 +39,7 @@
       zlib # Compression library
       yt-dlp # Video downloader
       nil # Nix Language Server
+      caligula # A lightweight, user-friendly disk imaging tool
 
       # Documentation and help
       tldr # Simplified man pages
