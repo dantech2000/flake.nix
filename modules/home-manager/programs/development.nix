@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # Development packages
   home.packages = with pkgs; [
     # Languages and runtimes
@@ -22,7 +23,7 @@
     stow # Symlink management
 
     # Cloud and DevOps tools
-    (pkgs.wrapHelm pkgs.kubernetes-helm {plugins = [pkgs.kubernetes-helmPlugins.helm-diff];})
+    (pkgs.wrapHelm pkgs.kubernetes-helm { plugins = [ pkgs.kubernetes-helmPlugins.helm-diff ]; })
     helmfile-wrapped # Helm charts management
     k9s # Kubernetes TUI
     kind # Kubernetes in Docker
@@ -78,10 +79,13 @@
     extraConfig = {
       github.user = "dantech2000";
       init = {
-        defaultBranch = "trunk";
+        defaultBranch = "main";
       };
       diff = {
         external = "${pkgs.difftastic}/bin/difft";
+      };
+      pull = {
+        rebase = true;
       };
     };
   };
