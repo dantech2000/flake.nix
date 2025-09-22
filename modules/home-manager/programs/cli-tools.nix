@@ -2,11 +2,9 @@
   lib,
   pkgs,
   ...
-}:
-{
+}: {
   # CLI utilities and system tools
-  home.packages =
-    with pkgs;
+  home.packages = with pkgs;
     [
       # Core utilities (better versions)
       bat # Better cat with syntax highlighting
