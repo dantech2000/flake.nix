@@ -90,6 +90,7 @@ in {
       '')
       (lib.mkIf isDarwin (lib.mkOrder 1300 ''
         # Mac-specific paths
+        export PATH="$HOME/.local/bin:$PATH"
         export PATH="/usr/local/opt/llvm/bin/clangd:/Library/Frameworks/Python.framework/Versions/3.7/bin:$PATH"
         export PATH="/Applications/Windsurf.app/Contents/MacOS:$PATH"
         [ -e /usr/local/bin/windsurf ] || ln -s /Applications/Windsurf.app/Contents/MacOS/Electron /usr/local/bin/windsurf
