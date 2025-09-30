@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   programs.nixvim = {
     plugins = {
       # Luasnip for snippets
@@ -153,21 +152,21 @@
           };
 
           sources = [
-            { name = "nvim_lsp_signature_help"; }
-            { name = "nvim_lsp"; }
+            {name = "nvim_lsp_signature_help";}
+            {name = "nvim_lsp";}
             {
               name = "luasnip";
               keyword_length = 2;
               priority = 50;
             }
-            { name = "copilot"; }
+            {name = "copilot";}
             {
               name = "buffer";
               keyword_length = 5;
             }
-            { name = "path"; }
-            { name = "emoji"; }
-            { name = "calc"; }
+            {name = "path";}
+            {name = "emoji";}
+            {name = "calc";}
           ];
 
           experimental = {
@@ -180,8 +179,8 @@
         filetype = {
           sql = {
             sources = [
-              { name = "vim-dadbod-completion"; }
-              { name = "buffer"; }
+              {name = "vim-dadbod-completion";}
+              {name = "buffer";}
             ];
           };
         };
@@ -199,7 +198,7 @@
                   ignore_cmds = ["Man" "!"];
                 };
               }
-              { name = "path"; }
+              {name = "path";}
             ];
           };
           "/" = {
@@ -207,7 +206,7 @@
               __raw = "cmp.mapping.preset.cmdline()";
             };
             sources = [
-              { name = "buffer"; }
+              {name = "buffer";}
             ];
           };
           "?" = {
@@ -215,7 +214,7 @@
               __raw = "cmp.mapping.preset.cmdline()";
             };
             sources = [
-              { name = "buffer"; }
+              {name = "buffer";}
             ];
           };
         };
