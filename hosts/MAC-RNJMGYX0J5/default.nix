@@ -5,11 +5,8 @@
   # Determinate Nix compatibility - disable nix-darwin's Nix management
   nix.enable = false;
 
-  # Nix configuration for flakes (when using Determinate Nix)
-  nix.settings = {
-    trusted-users = ["root" user];
-    experimental-features = "nix-command flakes";
-  };
+  # Note: nix.settings won't work when nix.enable = false
+  # You must manually edit /etc/nix/nix.conf to remove unsupported settings
 
   # Fix for nixbld group GID mismatch on macOS
   ids.gids.nixbld = 30000;

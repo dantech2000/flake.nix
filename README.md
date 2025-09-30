@@ -7,8 +7,8 @@ This repository contains my personal Nix configuration for macOS, using nix-darw
 This configuration is built with a **modular design** that separates concerns and makes maintenance easy:
 
 ### Home Manager Modules (User Environment)
-- **`neovim.nix`** - Complete Neovim configuration with plugins and LSP
-- **`zsh.nix`** - Shell configuration with oh-my-zsh, powerlevel10k, and plugins  
+- **`nixvim.nix`** - Declarative Neovim configuration using nixvim (see modules/home-manager/programs/nixvim/README.md)
+- **`zsh.nix`** - Shell configuration with oh-my-zsh, powerlevel10k, and plugins
 - **`development.nix`** - Development tools, languages, git, and DevOps tools
 - **`cli-tools.nix`** - Command-line utilities and system tools
 
@@ -32,7 +32,12 @@ This configuration is built with a **modular design** that separates concerns an
 - **Music**: Spotify customization via Spicetify with TokyoNight theme and 17+ extensions
 
 ### Development Environment (Home Manager)
-- **Editor**: Neovim with extensive plugin support and LSP configuration
+- **Editor**: Neovim configured with nixvim - declarative, modular, and reproducible
+  - LSP support for 15+ languages (Go, TypeScript, Rust, Nix, etc.)
+  - Treesitter for advanced syntax highlighting
+  - Telescope for fuzzy finding
+  - Harpoon for quick file navigation
+  - GitHub Copilot integration
 - **Languages**: Go, Python, Rust, Node.js, with proper toolchains
 - **DevOps**: Docker, Kubernetes (k9s, kubectl, helm), Terraform, Ansible
 - **Cloud**: AWS CLI, session-manager-plugin, aws-vault
@@ -73,7 +78,15 @@ This configuration is built with a **modular design** that separates concerns an
 │   │   │   ├── p10k/                 # Powerlevel10k theme
 │   │   │   └── starship/             # Starship prompt config
 │   │   └── programs/                 # User program modules
-│   │       ├── neovim.nix           # Editor configuration
+│   │       ├── nixvim.nix           # Nixvim entry point
+│   │       ├── nixvim/              # Modular Neovim config
+│   │       │   ├── options.nix      # Vim options
+│   │       │   ├── keymaps.nix      # Keybindings
+│   │       │   ├── lsp.nix          # LSP servers
+│   │       │   ├── completion.nix   # Completion & snippets
+│   │       │   ├── autocommands.nix # Autocommands
+│   │       │   ├── plugins/         # Plugin configurations
+│   │       │   └── README.md        # Neovim documentation
 │   │       ├── zsh.nix              # Shell configuration
 │   │       ├── development.nix      # Dev tools & languages
 │   │       └── cli-tools.nix        # CLI utilities
@@ -197,7 +210,7 @@ These modules are shared across all Darwin hosts:
 ### User Configuration (Home Manager)
 These modules are shared across all hosts:
 - **Shell**: Edit `modules/home-manager/programs/zsh.nix`
-- **Editor**: Edit `modules/home-manager/programs/neovim.nix`
+- **Editor**: Edit files in `modules/home-manager/programs/nixvim/` (see nixvim/README.md for details)
 - **Dev Tools**: Edit `modules/home-manager/programs/development.nix`
 - **CLI Tools**: Edit `modules/home-manager/programs/cli-tools.nix`
 

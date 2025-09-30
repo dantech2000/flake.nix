@@ -1,6 +1,6 @@
 {...}: {
   imports = [
-    ./neovim.nix
+    ./nixvim.nix
     ./zsh.nix
     ./development.nix
     ./cli-tools.nix
