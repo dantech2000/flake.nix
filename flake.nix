@@ -54,28 +54,31 @@
       system,
       hostname,
       user,
+      extraModules ? [],
     }:
       nix-darwin.lib.darwinSystem {
         inherit system;
         specialArgs = {inherit inputs user hostname;};
-        modules = [
-          ./modules/nix-darwin
-          {nixpkgs = nixpkgsConfig;}
-          home-manager.darwinModules.home-manager
-          (sharedModules
-            // {
-              home-manager = {
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                backupFileExtension = "backup";
-                users.${user} = {
-                  imports = [
-                    ./modules/home-manager
-                  ];
+        modules =
+          [
+            ./modules/nix-darwin
+            {nixpkgs = nixpkgsConfig;}
+            home-manager.darwinModules.home-manager
+            (sharedModules
+              // {
+                home-manager = {
+                  useGlobalPkgs = true;
+                  useUserPackages = true;
+                  backupFileExtension = "backup";
+                  users.${user} = {
+                    imports = [
+                      ./modules/home-manager
+                    ];
+                  };
                 };
-              };
-            })
-        ];
+              })
+          ]
+          ++ extraModules;
       };
 
     # Function to create standalone home-manager configurations
@@ -83,21 +86,24 @@
       system,
       hostname,
       user,
+      extraModules ? [],
     }:
       home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.${system};
         extraSpecialArgs = {inherit inputs user hostname;};
-        modules = [
-          {nixpkgs = nixpkgsConfig;}
-          ./modules/home-manager
-          {
-            home.username = user;
-            home.homeDirectory =
-              if nixpkgs.legacyPackages.${system}.stdenv.isLinux
-              then "/home/${user}"
-              else "/Users/${user}";
-          }
-        ];
+        modules =
+          [
+            {nixpkgs = nixpkgsConfig;}
+            ./modules/home-manager
+            {
+              home.username = user;
+              home.homeDirectory =
+                if nixpkgs.legacyPackages.${system}.stdenv.isLinux
+                then "/home/${user}"
+                else "/Users/${user}";
+            }
+          ]
+          ++ extraModules;
       };
     # Function to create NixOS-specific configurations
   in
@@ -128,6 +134,13 @@
           system = "arm64-darwin";
           hostname = "MAC-RNJMGYX0J5";
           inherit user;
+          extraModules = [./hosts/MAC-RNJMGYX0J5];
+        };
+        "nebula" = mkDarwinConfig {
+          system = "x86_64-darwin";
+          hostname = "nebula";
+          inherit user;
+          extraModules = [./hosts/nebula];
         };
       };
 
@@ -137,6 +150,7 @@
           system = "x86_64-linux";
           hostname = "serenity";
           inherit user;
+          extraModules = [./hosts/serenity];
         };
       };
 

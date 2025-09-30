@@ -58,10 +58,15 @@ This configuration is built with a **modular design** that separates concerns an
 
 ```
 ├── flake.nix                          # Main configuration entry point
-├── flake.lock                         # Lock file for dependencies  
+├── flake.lock                         # Lock file for dependencies
+├── hosts/                             # Host-specific configurations
+│   ├── MAC-RNJMGYX0J5/               # Apple Silicon Mac (work)
+│   │   └── default.nix               # Host-specific settings
+│   ├── nebula/                       # Intel Mac
+│   │   └── default.nix               # Host-specific settings
+│   └── serenity/                     # Linux workstation
+│       └── default.nix               # Host-specific settings
 ├── modules/
-│   ├── darwin/                        # Machine-specific core settings
-│   │   └── MAC-RNJMGYX0J5.nix        # Core nix-darwin configuration
 │   ├── home-manager/                  # User Environment (Modular)
 │   │   ├── default.nix               # Home Manager entry point
 │   │   ├── config/                   # Configuration files
@@ -69,7 +74,7 @@ This configuration is built with a **modular design** that separates concerns an
 │   │   │   └── starship/             # Starship prompt config
 │   │   └── programs/                 # User program modules
 │   │       ├── neovim.nix           # Editor configuration
-│   │       ├── zsh.nix              # Shell configuration  
+│   │       ├── zsh.nix              # Shell configuration
 │   │       ├── development.nix      # Dev tools & languages
 │   │       └── cli-tools.nix        # CLI utilities
 │   ├── nix-darwin/                   # System Configuration (Modular)
@@ -81,7 +86,6 @@ This configuration is built with a **modular design** that separates concerns an
 │   │   ├── programs/                # System packages
 │   │   ├── homebrew/                # Package management
 │   │   └── spicetify/               # Spotify customization
-│   ├── nixos/                       # Linux configurations
 │   └── shared/                      # Shared components
 ├── README.md                        # This file
 └── Taskfile.yml                     # Common tasks automation
@@ -108,51 +112,90 @@ nix run github:LnL7/nix-darwin --extra-experimental-features 'nix-command flakes
 git clone https://github.com/dantech2000/flake.nix.git ~/.config/nix-darwin
 cd ~/.config/nix-darwin
 
-# For existing machines (MAC-RNJMGYX0J5)
+# For Apple Silicon Mac (work)
 darwin-rebuild switch --flake .#MAC-RNJMGYX0J5
+
+# For Intel Mac
+darwin-rebuild switch --flake .#nebula
+
+# For Linux workstation (home-manager only)
+home-manager switch --flake .#serenity
 
 # For new machines - see "New Machine Setup" below
 ```
 
 ## New Machine Setup
 
-### 1. Create Machine Configuration
+### 1. Create Host Configuration
 ```bash
-# Copy the core settings template  
-cp modules/darwin/MAC-RNJMGYX0J5.nix modules/darwin/<your-hostname>.nix
+# Create a new host directory
+mkdir -p hosts/<your-hostname>
+
+# Copy an existing host configuration as a template
+cp hosts/MAC-RNJMGYX0J5/default.nix hosts/<your-hostname>/default.nix
 
 # Edit the file for your machine
-vim modules/darwin/<your-hostname>.nix
+vim hosts/<your-hostname>/default.nix
 ```
 
 ### 2. Update Flake Configuration
-Edit `flake.nix` and add your machine:
+Edit `flake.nix` and add your machine to the appropriate section:
+
+**For macOS (Darwin):**
 ```nix
 darwinConfigurations = {
   "MAC-RNJMGYX0J5" = mkDarwinConfig { ... };
+  "nebula" = mkDarwinConfig { ... };
   "<your-hostname>" = mkDarwinConfig {
     system = "aarch64-darwin";  # or "x86_64-darwin" for Intel
     hostname = "<your-hostname>";
-    user = "<your-username>";
+    inherit user;  # or user = "<your-username>";
+    extraModules = [ ./hosts/<your-hostname> ];
+  };
+};
+```
+
+**For Linux (Home Manager only):**
+```nix
+homeConfigurations = {
+  "serenity" = mkHomeManagerConfig { ... };
+  "<your-hostname>" = mkHomeManagerConfig {
+    system = "x86_64-linux";  # or "aarch64-linux" for ARM
+    hostname = "<your-hostname>";
+    inherit user;  # or user = "<your-username>";
+    extraModules = [ ./hosts/<your-hostname> ];
   };
 };
 ```
 
 ### 3. Apply Configuration
 ```bash
+# For macOS
 darwin-rebuild switch --flake .#<your-hostname>
+
+# For Linux (home-manager only)
+home-manager switch --flake .#<your-hostname>
 ```
 
 ## Customization
 
+### Host-Specific Configuration
+Each host has its own configuration directory under `hosts/<hostname>/`:
+- **Core Settings**: Edit `hosts/<hostname>/default.nix`
+- **Platform Settings**: Adjust `nixpkgs.hostPlatform` for your architecture
+- **Host-Specific Packages**: Add packages unique to that machine
+- **Hardware Settings**: Configure hardware-specific options
+
 ### System Configuration (Nix-Darwin)
+These modules are shared across all Darwin hosts:
 - **Fonts**: Edit `modules/nix-darwin/fonts/default.nix`
 - **macOS Settings**: Edit `modules/nix-darwin/system/default.nix`
 - **Homebrew Packages**: Edit `modules/nix-darwin/homebrew/default.nix`
 - **System Packages**: Edit `modules/nix-darwin/programs/default.nix`
 - **Spotify Customization**: Edit `modules/nix-darwin/spicetify/default.nix`
 
-### User Configuration (Home Manager)  
+### User Configuration (Home Manager)
+These modules are shared across all hosts:
 - **Shell**: Edit `modules/home-manager/programs/zsh.nix`
 - **Editor**: Edit `modules/home-manager/programs/neovim.nix`
 - **Dev Tools**: Edit `modules/home-manager/programs/development.nix`
@@ -161,9 +204,10 @@ darwin-rebuild switch --flake .#<your-hostname>
 ### Adding New Modules
 The modular structure makes it easy to add new functionality:
 
-1. **System Module**: Create `modules/nix-darwin/<name>/default.nix`
-2. **User Module**: Create `modules/home-manager/programs/<name>.nix`
-3. **Import**: Add to respective `imports` list in `default.nix`
+1. **Host-Specific Module**: Create/edit `hosts/<hostname>/default.nix`
+2. **System Module**: Create `modules/nix-darwin/<name>/default.nix`
+3. **User Module**: Create `modules/home-manager/programs/<name>.nix`
+4. **Import**: Add to respective `imports` list in `default.nix`
 
 ## Common Tasks
 
@@ -244,10 +288,13 @@ sudo nix-collect-garbage -d           # System-wide cleanup
 ## Benefits of Modular Structure
 
 - **Easy Maintenance**: Each component in its own file
-- **Clear Organization**: Logical separation by functionality  
+- **Clear Organization**: Logical separation by functionality
+- **Host-Specific Configs**: Easy per-machine customization via `hosts/` directory
+- **Shared Modules**: Common settings in `modules/` reused across all hosts
 - **Faster Development**: Modify only what you need
 - **Better Documentation**: Self-documenting structure
 - **Reusability**: Modules can be easily shared or adapted
+- **Multi-Platform**: Support for Darwin (macOS) and Linux hosts
 - **Testing**: Test individual components independently
 
 ## Development Environment
@@ -268,10 +315,11 @@ The development shell provides:
 ## System Overview
 
 - **Total Packages**: 100+ via Nix + 44+ via Homebrew
-- **Modular Components**: 11 specialized modules  
+- **Modular Components**: 11 specialized modules
+- **Configured Hosts**: 3 (MAC-RNJMGYX0J5, nebula, serenity)
 - **Configuration Files**: Organized and templated
 - **Maintenance Burden**: Minimal thanks to modular design
-- **Platform Support**: macOS (primary), NixOS (vm/testing)
+- **Platform Support**: macOS (Darwin) - Apple Silicon & Intel, Linux (x86_64)
 - **Music Enhancement**: Spotify with 17+ extensions and custom theming
 
 ## VMware Fusion Testing
