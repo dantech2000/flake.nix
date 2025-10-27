@@ -81,6 +81,7 @@ _: {
       "hammerspoon"
       "iina"
       "insomnia"
+      "mongodb-compass"
       "notion"
       "obsidian"
       "rectangle"
