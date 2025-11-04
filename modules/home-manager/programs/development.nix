@@ -31,6 +31,7 @@
     kubectl # Kubernetes CLI
     kubectx # Kubernetes context switching
     stern # Multi-pod log tailing
+    kustomize_4 # Kubernetes configuration management
 
     # Infrastructure and automation
     # ansible-lint # Ansible linting (temporarily disabled due to ncclient hash mismatch in unstable)
