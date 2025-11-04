@@ -22,8 +22,6 @@
     stow # Symlink management
 
     # Cloud and DevOps tools
-    (pkgs.wrapHelm pkgs.kubernetes-helm {plugins = [pkgs.kubernetes-helmPlugins.helm-diff];})
-    helmfile-wrapped # Helm charts management
     k9s # Kubernetes TUI
     kind # Kubernetes in Docker
     krew # kubectl plugin manager

@@ -15,6 +15,10 @@ _: {
     # Homebrew Taps
     taps = [
       {
+        name = "codecademy-engineering/engineering";
+        clone_target = "https://github.com/codecademy-engineering/homebrew-bootstrap";
+      }
+      {
         name = "shopify/shopify";
         clone_target = "https://github.com/Shopify/homebrew-shopify";
         force_auto_update = false;
@@ -44,6 +48,8 @@ _: {
     brews = [
       "docker"
       "golangci-lint"
+      "helm@3.14.4"
+      "helmfile@0.144.0"
       "libffi"
       "libpq"
       "libyaml"
