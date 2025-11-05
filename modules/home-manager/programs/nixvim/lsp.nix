@@ -149,7 +149,7 @@
           tflint.enable = true;
 
           # Zig
-          zls.enable = true;
+          #zls.enable = true;
 
           # HTML (with templ support)
           html = {

@@ -68,7 +68,6 @@
           vim
           vimdoc
           yaml
-          zig
         ];
       };
 
