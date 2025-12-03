@@ -1,0 +1,19 @@
+{
+  "lsp": {
+    "nixd": {
+      "initialization_options": {
+        "nixpkgs": {
+          "expr": "import <nixpkgs> { }"
+        },
+        "options": {
+          "nixos": {
+            "expr": "(builtins.getFlake \"/path/to/your/flake\").nixosConfigurations.YOUR_HOST.options"
+          },
+          "home_manager": {
+            "expr": "(builtins.getFlake \"/path/to/your/flake\").homeConfigurations.YOUR_USER.options"
+          }
+        }
+      }
+    }
+  }
+}
