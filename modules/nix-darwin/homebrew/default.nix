@@ -28,11 +28,6 @@ _: {
         clone_target = "https://github.com/hashicorp/homebrew-tap";
       }
       {
-        name = "dantech2000/tap";
-        clone_target = "https://github.com/dantech2000/homebrew-tap";
-        force_auto_update = true;
-      }
-      {
         name = "sst/tap";
         clone_target = "https://github.com/sst/homebrew-tap";
         force_auto_update = true;
@@ -55,7 +50,6 @@ _: {
       "libyaml"
       "opencode"
       "readline"
-      "refresh"
       "shopify/shopify/shopify-cli"
       "snappy"
       "tfenv"
@@ -93,6 +87,7 @@ _: {
       "obsidian"
       "rectangle"
       "raycast"
+      "dantech2000/homebrew-tap/refresh"
       "session-manager-plugin"
       "slack"
       "tailscale-app"
