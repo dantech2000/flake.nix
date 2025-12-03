@@ -37,6 +37,11 @@ _: {
         clone_target = "https://github.com/kreuzwerker/homebrew-taps";
         force_auto_update = true;
       }
+      {
+        name = "dantech2000/homebrew-tap";
+        clone_target = "https://github.com/dantech2000/homebrew-tap";
+        force_auto_update = true;
+      }
     ];
 
     # Homebrew Formulae
@@ -90,7 +95,7 @@ _: {
       "dantech2000/homebrew-tap/refresh"
       "session-manager-plugin"
       "slack"
-      "tailscale-app"
+      # "tailscale-app"
       "telegram"
       "todoist-app"
       "vagrant"

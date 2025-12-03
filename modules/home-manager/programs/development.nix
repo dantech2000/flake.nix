@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   # Development packages
   home.packages = with pkgs; [
     # Languages and runtimes

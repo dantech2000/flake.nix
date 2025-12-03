@@ -1,0 +1,12 @@
+# SOPS configuration for nix-darwin secrets
+# Age public key derived from: ~/.ssh/id_ed25519
+keys:
+  - &drodriguez age18t74pkspsdwvx82cf9x4fjwjd8rmp6k0jk49ge2um3sahr3yu4psgv63as
+
+creation_rules:
+  # Default rule for all secrets
+  - path_regex: secrets/.*\.yaml$
+    key_groups:
+      - age:
+          - *drodriguez
+

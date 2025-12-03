@@ -4,5 +4,6 @@
     ./zsh.nix
     ./development.nix
     ./cli-tools.nix
+    ./sops.nix
   ];
 }

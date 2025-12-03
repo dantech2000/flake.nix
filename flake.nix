@@ -22,6 +22,10 @@
     # Spicetify dependencies
     #spicetify-nix.url = "github:Gerg-L/spicetify-nix";
     #spicetify-nix.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Sops-nix for secrets management
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
@@ -31,6 +35,7 @@
     nixpkgs,
     nixvim,
     flake-utils,
+    sops-nix,
     ...
   } @ inputs: let
     inherit (flake-utils.lib) eachDefaultSystem;
@@ -80,6 +85,7 @@
                   users.${user} = {
                     imports = [
                       nixvim.homeModules.nixvim
+                      sops-nix.homeModules.sops
                       ./modules/home-manager
                     ];
                   };
@@ -103,6 +109,7 @@
         modules =
           [
             nixvim.homeModules.nixvim
+            sops-nix.homeModules.sops
             {nixpkgs = nixpkgsConfig;}
             ./modules/home-manager
             {
