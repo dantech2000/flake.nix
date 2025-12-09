@@ -71,6 +71,7 @@ _: {
       "contour"
       "cursor"
       "brave-browser"
+      "bitwarden"
       "devtoys"
       "displaylink"
       "discord"

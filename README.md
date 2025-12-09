@@ -393,6 +393,96 @@ For system maintenance:
 - `task history` - Show the history of configurations
 - `task show-config` - Show the current system configuration
 
+## Managing Secrets with SOPS
+
+This configuration uses [SOPS](https://github.com/getsops/sops) with [age](https://github.com/FiloSottile/age) encryption for secure secrets management. Secrets are stored encrypted in `secrets/secrets.yaml` and decrypted at build time.
+
+### Prerequisites
+
+Ensure your age key is set up:
+```bash
+# Verify the age key file exists
+cat ~/.config/sops/age/keys.txt
+
+# If not, derive it from your SSH key
+mkdir -p ~/.config/sops/age
+ssh-to-age -private-key -i ~/.ssh/id_ed25519 > ~/.config/sops/age/keys.txt
+chmod 600 ~/.config/sops/age/keys.txt
+```
+
+### Adding a New Secret
+
+**Step 1: Edit the encrypted secrets file**
+```bash
+cd ~/.config/nix-darwin
+sops secrets/secrets.yaml
+```
+This opens the file in your editor with values decrypted. Add your new secret using YAML syntax:
+```yaml
+ssh:
+    id_ed25519: <existing-value>
+my_new_secret: your-secret-value-here
+```
+Save and close. SOPS automatically re-encrypts the file.
+
+**Step 2: Reference the secret in Nix configuration**
+
+Edit `modules/home-manager/programs/sops.nix` and add the secret to the `sops.secrets` attribute:
+```nix
+sops.secrets = {
+  "ssh/id_ed25519" = {
+    path = "${config.home.homeDirectory}/.ssh/id_ed25519";
+    mode = "0600";
+  };
+  # Add your new secret
+  "my_new_secret" = {
+    path = "${config.home.homeDirectory}/.config/my-app/secret";
+    mode = "0600";
+  };
+};
+```
+
+**Step 3: Rebuild the configuration**
+```bash
+task switch
+# or
+darwin-rebuild switch --flake .#<hostname>
+```
+
+### Useful SOPS Commands
+
+```bash
+# Edit secrets (decrypts, opens editor, re-encrypts on save)
+sops secrets/secrets.yaml
+
+# View decrypted secrets (read-only)
+sops -d secrets/secrets.yaml
+
+# Rotate keys (re-encrypt with new keys)
+sops updatekeys secrets/secrets.yaml
+
+# Encrypt a new file
+sops -e newfile.yaml > secrets/newfile.yaml
+```
+
+### Nested Secrets
+
+For nested YAML structures, use forward slashes in the secret name:
+```yaml
+# In secrets/secrets.yaml
+database:
+    password: my-db-password
+    api_key: my-api-key
+```
+
+```nix
+# In sops.nix
+sops.secrets = {
+  "database/password" = { ... };
+  "database/api_key" = { ... };
+};
+```
+
 ## Additional Resources
 
 - **Nix Manual**: https://nixos.org/manual/nix/stable/
